@@ -185,8 +185,8 @@ export default function HomePage() {
 
       {groups.length === 0 && (
         <div className="panel text-sm text-white/60">
-          No product directories found under <code className="font-mono">{"DATA_ROOT/{category}/{vendor}/"}</code>.
-          Set <code className="font-mono">DATA_ROOT</code> in <code className="font-mono">.env.local</code> to point at your data.
+          No product directories found under <code className="font-mono">{"PRODUCT_MCP_DATA_DIR/{category}/{vendor}/"}</code>.
+          Set <code className="font-mono">PRODUCT_MCP_DATA_DIR</code> in <code className="font-mono">.env</code> to point at your data.
         </div>
       )}
     </div>

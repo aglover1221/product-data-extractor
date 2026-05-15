@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { listAnnotationsAcrossProducts } from "@/lib/stages";
+import SpotfixButton from "@/app/_components/SpotfixButton";
 
 export const dynamic = "force-dynamic";
 
@@ -92,7 +93,7 @@ export default function InboxPage({
         <div className="panel text-sm text-white/60">No matching annotations.</div>
       ) : (
         <div className="panel overflow-x-auto">
-          <table className="data-table min-w-[1000px]">
+          <table className="data-table min-w-[1100px]">
             <thead>
               <tr>
                 <th>Product</th>
@@ -102,6 +103,7 @@ export default function InboxPage({
                 <th>Text</th>
                 <th>Created</th>
                 <th className="text-right">Age</th>
+                <th className="text-right">Action</th>
               </tr>
             </thead>
             <tbody>
@@ -151,6 +153,22 @@ export default function InboxPage({
                   </td>
                   <td className="text-right text-[11px] text-white/50 font-mono">
                     {ageString(a.created_at)}
+                  </td>
+                  <td className="text-right">
+                    {a.type === "flag" && a.status === "open" ? (
+                      <SpotfixButton
+                        productSlug={slug}
+                        annotationId={a.id}
+                        size="sm"
+                      />
+                    ) : (
+                      <Link
+                        href={`/pipeline/spotfix/${slug}`}
+                        className="text-[10px] text-white/40 hover:text-white/70"
+                      >
+                        view
+                      </Link>
+                    )}
                   </td>
                 </tr>
               ))}

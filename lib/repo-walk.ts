@@ -1,19 +1,29 @@
 import fs from "node:fs";
 import path from "node:path";
+import { env } from "@/lib/env";
 
 /**
- * Root directory the viewer reads data from. Configured via the `DATA_ROOT`
- * env var; defaults to a tiny sample dataset shipped with the repo so a fresh
- * clone boots out-of-the-box. Point this at a real product knowledgebase to
- * use the viewer over your own data.
+ * Root of the product data tree (schemas, source MDs, product MDs,
+ * extractions). Configured via the `PRODUCT_MCP_DATA_DIR` env var; defaults
+ * to `./data/sample` so a fresh clone boots out-of-the-box. All path
+ * traversal helpers root here.
  */
-export const DATA_ROOT = path.resolve(
-  process.cwd(),
-  process.env.DATA_ROOT ?? "data/sample"
-);
+export const REPO_ROOT = path.resolve(env.PRODUCT_MCP_DATA_DIR);
+export const DATA_ROOT = REPO_ROOT;
 
-/** Back-compat alias. Prefer `DATA_ROOT` in new code. */
-export const REPO_ROOT = DATA_ROOT;
+/**
+ * Known top-level category directories. Walkers only descend into these
+ * at depth 0 — guards against picking up unrelated sibling directories
+ * (build output, vendor-side artifacts, planning docs, etc.).
+ */
+export const KNOWN_CATEGORIES = new Set([
+  "server",
+  "storage",
+  "hci",
+  "networking",
+  "chassis",
+  "software-defined-infrastructure",
+]);
 
 const SKIP_NAMES = new Set([
   "node_modules",
@@ -49,6 +59,11 @@ export function walkDirs(
       if (!entry.isDirectory()) continue;
       if (entry.name.startsWith(".")) continue;
       if (SKIP_NAMES.has(entry.name)) continue;
+      // At repo root, only descend into known category directories.
+      // Skips legacy `dell/`, `web/`, `schemas/`, etc.
+      if (depth === 0 && abs === start && !KNOWN_CATEGORIES.has(entry.name)) {
+        continue;
+      }
       stack.push({
         abs: path.join(abs, entry.name),
         rel: rel ? `${rel}/${entry.name}` : entry.name,

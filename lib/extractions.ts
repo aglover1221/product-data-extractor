@@ -1,6 +1,5 @@
 import fs from "node:fs";
 import path from "node:path";
-import { DATA_ROOT } from "./repo-walk";
 
 export type Evidence = {
   source: string;
@@ -82,11 +81,15 @@ export type StorageSummary = {
 
 export type ExtractionSummary = ServerSummary | StorageSummary;
 
+const REPO_ROOT = path.resolve(process.cwd(), "..");
+
 function unwrap<T = any>(field: any): T | null {
   if (field == null) return null;
   if (typeof field === "object" && "value" in field) return field.value as T;
   return field as T;
 }
+
+import { KNOWN_CATEGORIES } from "./repo-walk";
 
 function walk(dir: string, out: string[], depth = 0) {
   if (depth > 8) return;
@@ -98,6 +101,11 @@ function walk(dir: string, out: string[], depth = 0) {
   }
   for (const entry of entries) {
     if (entry.name.startsWith(".") || entry.name === "node_modules" || entry.name === "source") {
+      continue;
+    }
+    // At repo root, only descend into known category dirs (skips legacy
+    // dell/, web/, schemas/, _planning/, etc).
+    if (depth === 0 && dir === REPO_ROOT && !KNOWN_CATEGORIES.has(entry.name)) {
       continue;
     }
     const fp = path.join(dir, entry.name);
@@ -164,63 +172,93 @@ function summarizeStorage(d: Extraction, fp: string): StorageSummary {
   };
 }
 
-export function listExtractions(): ExtractionSummary[] {
+// ----------------------------------------------------------------------------
+// Memoization layer
+//
+// listExtractions / getExtraction / getProductDir all walk REPO_ROOT and
+// parse every extraction.json. Without caching, callers that fan out
+// per-slug (the inbox, annotations.ts:findExtractionPath) trigger N²
+// behavior — 167 walks + 167×167 parses on a single request. We memoize
+// the path index for a short TTL so repeated lookups in one request batch
+// stay O(1).
+// ----------------------------------------------------------------------------
+
+const TTL_MS = 30_000;
+let _listCache: { at: number; value: ExtractionSummary[] } | null = null;
+let _slugIndex: { at: number; map: Map<string, string> } | null = null;
+
+function readSummary(fp: string): ExtractionSummary | null {
+  try {
+    const raw = fs.readFileSync(fp, "utf8");
+    const d: Extraction = JSON.parse(raw);
+    if (d.category === "storage") return summarizeStorage(d, fp);
+    return summarizeServer(d, fp);
+  } catch (err) {
+    console.error(`Failed to load ${fp}:`, err);
+    return null;
+  }
+}
+
+function rebuildIndex(): {
+  list: ExtractionSummary[];
+  index: Map<string, string>;
+} {
   const files: string[] = [];
-  walk(DATA_ROOT, files);
-  return files
-    .map((fp) => {
-      try {
-        const raw = fs.readFileSync(fp, "utf8");
-        const d: Extraction = JSON.parse(raw);
-        if (d.category === "storage") return summarizeStorage(d, fp);
-        return summarizeServer(d, fp);
-      } catch (err) {
-        console.error(`Failed to load ${fp}:`, err);
-        return null;
-      }
-    })
-    .filter((x): x is ExtractionSummary => x !== null)
-    .sort((a, b) => a.model.localeCompare(b.model));
+  walk(REPO_ROOT, files);
+  const list: ExtractionSummary[] = [];
+  const index = new Map<string, string>();
+  for (const fp of files) {
+    const s = readSummary(fp);
+    if (!s) continue;
+    list.push(s);
+    if (s.slug) index.set(s.slug, fp);
+  }
+  list.sort((a, b) => a.model.localeCompare(b.model));
+  return { list, index };
+}
+
+function ensureCache(): void {
+  const now = Date.now();
+  if (_listCache && now - _listCache.at < TTL_MS && _slugIndex) return;
+  const { list, index } = rebuildIndex();
+  _listCache = { at: now, value: list };
+  _slugIndex = { at: now, map: index };
+}
+
+/** Force a refresh on the next call — invoke after writing an extraction.json. */
+export function invalidateExtractionCache(): void {
+  _listCache = null;
+  _slugIndex = null;
+}
+
+export function listExtractions(): ExtractionSummary[] {
+  ensureCache();
+  return _listCache!.value;
 }
 
 export function getExtraction(slug: string): Extraction | null {
-  const files: string[] = [];
-  walk(DATA_ROOT, files);
-  for (const fp of files) {
-    try {
-      const raw = fs.readFileSync(fp, "utf8");
-      const d: Extraction = JSON.parse(raw);
-      if (d.slug === slug) return d;
-    } catch {
-      // skip
-    }
+  ensureCache();
+  const fp = _slugIndex!.map.get(slug);
+  if (!fp) return null;
+  try {
+    const raw = fs.readFileSync(fp, "utf8");
+    return JSON.parse(raw) as Extraction;
+  } catch {
+    return null;
   }
-  return null;
 }
 
 /** Returns the product directory itself (parent of source/), e.g. .../server/dell/poweredge/r770. */
 export function getProductDir(slug: string): string | null {
-  const files: string[] = [];
-  walk(DATA_ROOT, files);
-  for (const fp of files) {
-    try {
-      const raw = fs.readFileSync(fp, "utf8");
-      const d: Extraction = JSON.parse(raw);
-      if (d.slug === slug) return path.dirname(fp);
-    } catch {
-      // skip
-    }
-  }
-  // Fallback: products without extraction.json yet — locate by slug under any top-level category root.
-  let entries: fs.Dirent[];
-  try {
-    entries = fs.readdirSync(DATA_ROOT, { withFileTypes: true });
-  } catch {
-    return null;
-  }
-  for (const e of entries) {
-    if (!e.isDirectory() || e.name.startsWith(".") || e.name.startsWith("_")) continue;
-    const found = findProductDirByName(path.join(DATA_ROOT, e.name), slug, 0);
+  ensureCache();
+  const fp = _slugIndex!.map.get(slug);
+  if (fp) return path.dirname(fp);
+  // Fallback: products without extraction.json yet — locate by slug under category roots.
+  const CATEGORY_ORDER = ["server", "chassis", "storage", "networking", "hci", "software-defined-infrastructure"];
+  for (const cat of CATEGORY_ORDER) {
+    const root = path.join(REPO_ROOT, cat);
+    if (!fs.existsSync(root)) continue;
+    const found = findProductDirByName(root, slug, 0);
     if (found) return found;
   }
   return null;
@@ -239,7 +277,7 @@ export function getProductSourceDir(slug: string): string | null {
  * line-scope = `../source/<file>`, category-scope = `../../source/<file>`. As a backward-
  * compat affordance for pre-2026-05-07 evidence records that stored bare filenames, a
  * filename without a `source/` prefix is also tried as `<productDir>/source/<file>`.
- * Returns null if the resolved path doesn't exist or escapes DATA_ROOT.
+ * Returns null if the resolved path doesn't exist or escapes REPO_ROOT.
  */
 export function resolveProductSourcePath(slug: string, manifestPath: string): string | null {
   if (!manifestPath || manifestPath === "source-silent" || manifestPath === "derived") return null;
@@ -255,7 +293,7 @@ export function resolveProductSourcePath(slug: string, manifestPath: string): st
   }
 
   for (const fp of candidates) {
-    if (!fp.startsWith(DATA_ROOT)) continue;
+    if (!fp.startsWith(REPO_ROOT)) continue;
     if (fs.existsSync(fp) && fs.statSync(fp).isFile()) return fp;
   }
   return null;
@@ -291,4 +329,4 @@ function findProductDirByName(dir: string, slug: string, depth: number): string 
   return null;
 }
 
-export { unwrap, DATA_ROOT };
+export { unwrap, REPO_ROOT };

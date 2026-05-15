@@ -5,7 +5,14 @@ import { usePathname } from "next/navigation";
 
 const ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Portfolio" },
-  { href: "/schemas", label: "Schemas" }
+  { href: "/inbox", label: "Inbox" },
+  { href: "/pipeline/discover", label: "Discover" },
+  { href: "/pipeline/sources", label: "Sources" },
+  { href: "/pipeline/parse", label: "Parse" },
+  { href: "/pipeline/schema", label: "Schemas" },
+  { href: "/pipeline/extract", label: "Extract" },
+  { href: "/pipeline/runs", label: "Runs" },
+  { href: "/pipeline/audit", label: "Audit" }
 ];
 
 function isActive(pathname: string, href: string): boolean {

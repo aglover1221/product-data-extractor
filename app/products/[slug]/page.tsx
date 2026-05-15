@@ -8,6 +8,7 @@ import StorageView from "./_storage-view";
 import NetworkingView from "./_networking-view";
 import HciView from "./_hci-view";
 import { PipelineStrip, SourcesPanel, VerifyPanel } from "./_pipeline-strip";
+import ReExtractButton from "@/app/_components/ReExtractButton";
 
 export const dynamic = "force-dynamic";
 
@@ -825,9 +826,20 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   const d = getExtraction(params.slug) as Extraction | null;
   if (!d) notFound();
 
+  const reExtract = (
+    <div className="flex justify-end">
+      <ReExtractButton
+        productSlug={d.slug}
+        category={d.category}
+        label="Re-extract"
+      />
+    </div>
+  );
+
   if (d.category === "storage") {
     return (
       <>
+        {reExtract}
         <StorageView d={d} />
         <div className="text-center text-[11px] text-white/30 py-4 mt-6">
           Hover any value or table row to see source · anchor · page · confidence · quote.
@@ -844,6 +856,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   if (d.category === "networking") {
     return (
       <>
+        {reExtract}
         <NetworkingView d={d} />
         <div className="text-center text-[11px] text-white/30 py-4 mt-6">
           Hover any value or table row to see source · anchor · page · confidence · quote.
@@ -860,6 +873,7 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
   if (d.category === "hci") {
     return (
       <>
+        {reExtract}
         <HciView d={d} />
         <div className="text-center text-[11px] text-white/30 py-4 mt-6">
           Hover any value or table row to see source · anchor · page · confidence · quote.
@@ -881,16 +895,23 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
 
   return (
     <div className="space-y-6">
-      <div>
-        <div className="text-[11px] uppercase tracking-wider text-white/40">
-          {d.vendor} / {d.category} / {d.product_line}
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <div className="text-[11px] uppercase tracking-wider text-white/40">
+            {d.vendor} / {d.category} / {d.product_line}
+          </div>
+          <h1 className="text-2xl font-semibold mt-1">{d.model}</h1>
+          <div className="text-[11px] text-white/40 font-mono mt-1">
+            /{d.slug} · schema {d.extraction_metadata?.schema_version ?? "—"} · extracted{" "}
+            {d.extraction_metadata?.extracted_at ?? "—"} · extractor{" "}
+            {d.extraction_metadata?.extractor ?? "—"}
+          </div>
         </div>
-        <h1 className="text-2xl font-semibold mt-1">{d.model}</h1>
-        <div className="text-[11px] text-white/40 font-mono mt-1">
-          /{d.slug} · schema {d.extraction_metadata?.schema_version ?? "—"} · extracted{" "}
-          {d.extraction_metadata?.extracted_at ?? "—"} · extractor{" "}
-          {d.extraction_metadata?.extractor ?? "—"}
-        </div>
+        <ReExtractButton
+          productSlug={d.slug}
+          category={d.category}
+          label="Re-extract"
+        />
       </div>
 
       <PipelineStrip stage={stage} serverType={serverType} />

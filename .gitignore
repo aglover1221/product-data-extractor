@@ -1,7 +1,14 @@
 node_modules
 .next
+data/*.db
+data/*.db-journal
+data/*.db-shm
+data/*.db-wal
+*.log
+.DS_Store
+.env
 .env.local
 .env*.local
-*.log
-*.tsbuildinfo
-.DS_Store
+tsconfig.tsbuildinfo
+dist
+build

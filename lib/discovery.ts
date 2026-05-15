@@ -60,7 +60,7 @@ export type DiscoverySummary = {
   file: string;
 };
 
-/** Walk DATA_ROOT and return every `{category}/_discovery/*.md` file. */
+/** Walk REPO_ROOT and return every `{category}/_discovery/*.md` file. */
 function listDiscoveryFiles(): string[] {
   const out: string[] = [];
   let topEntries: fs.Dirent[];

@@ -1,25 +1,8 @@
 import fs from "node:fs";
 import path from "node:path";
-import { DATA_ROOT } from "./repo-walk";
+import { REPO_ROOT, KNOWN_CATEGORIES } from "./repo-walk";
 import { parseMarkdown } from "./safe-matter";
 import { readProductMdManifest } from "./sources";
-
-/**
- * Categories that look like portfolio roots — top-level subdirectories of
- * DATA_ROOT that aren't dotfiles, underscore-prefixed (`_planning`,
- * `_discovery`), or reserved (`schemas`, `node_modules`, etc.).
- */
-const RESERVED_TOP_LEVEL = new Set([
-  "schemas",
-  "node_modules",
-  ".next",
-  "data",
-  "lib",
-  "app",
-  "scripts",
-  "public",
-  "web"
-]);
 
 export type Category = string;
 
@@ -172,25 +155,12 @@ function readLineSources(lineDir: string): LineSource[] {
   return out.sort((a, b) => a.name.localeCompare(b.name));
 }
 
-/** Top-level dirs under DATA_ROOT that look like product categories. */
-function listCategories(): Category[] {
-  const out: Category[] = [];
-  for (const e of safeReaddir(DATA_ROOT)) {
-    if (!e.isDirectory()) continue;
-    if (isHidden(e.name) || RESERVED_TOP_LEVEL.has(e.name)) continue;
-    // A category dir must contain at least one vendor dir.
-    const vendors = safeReaddir(path.join(DATA_ROOT, e.name)).filter(
-      (v) => v.isDirectory() && !isHidden(v.name)
-    );
-    if (vendors.length > 0) out.push(e.name);
-  }
-  return out.sort();
-}
-
+/** Walk REPO_ROOT and group products by category → vendor → product line. */
 export function listPortfolio(): CategoryGroup[] {
   const out: CategoryGroup[] = [];
-  for (const category of listCategories()) {
-    const catRoot = path.join(DATA_ROOT, category);
+  for (const category of KNOWN_CATEGORIES) {
+    const catRoot = path.join(REPO_ROOT, category);
+    if (!fs.existsSync(catRoot)) continue;
     const lineGroups: ProductLineGroup[] = [];
     for (const vendorEntry of safeReaddir(catRoot)) {
       if (!vendorEntry.isDirectory() || isHidden(vendorEntry.name)) continue;
@@ -239,8 +209,9 @@ export function listPortfolio(): CategoryGroup[] {
 
 /** Locate a single product by slug across all categories and vendors. */
 export function findProduct(slug: string): ProductEntry | null {
-  for (const category of listCategories()) {
-    const catRoot = path.join(DATA_ROOT, category);
+  for (const category of KNOWN_CATEGORIES) {
+    const catRoot = path.join(REPO_ROOT, category);
+    if (!fs.existsSync(catRoot)) continue;
     for (const vendorEntry of safeReaddir(catRoot)) {
       if (!vendorEntry.isDirectory() || isHidden(vendorEntry.name)) continue;
       const vendor = vendorEntry.name;

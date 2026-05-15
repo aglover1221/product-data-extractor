@@ -1,64 +1,79 @@
-# product-mcp viewer
+# product-data-extractor
 
-A Next.js viewer for structured product extractions. Reads a directory of
-per-product `extraction.json` files plus schema markdown and renders:
+Studio for structured product data extraction. A Next.js viewer + orchestrator
+that turns vendor PDFs into structured `extraction.json` per a schema you
+define, with per-value source attribution (page, quote, confidence).
 
-- A portfolio index grouped by category → vendor → product line
-- Per-product detail pages with every extracted field, its source quote,
-  page anchor, and confidence
-- Schema markdown (base + overlays) with anchored links
-- Source manifests (`sources.yaml` + product-MD frontmatter)
-- An annotation inbox for flagging fields that need a closer look
+The viewer renders portfolio, schemas, source manifests, and extractions over
+a configurable data root. The orchestrator drives a four-stage pipeline:
 
-The viewer is **vendor-neutral** — it discovers categories and vendors from
-the directory tree at runtime. It ships with a tiny sample dataset (one Dell
-PowerEdge R770 server) so a fresh clone boots out-of-the-box.
+```
+discover  →  pull-sources  →  parse (Reducto)  →  extract (Anthropic Batch)
+```
+
+Each stage writes back to the data tree and to a local SQLite db for
+orchestrator state (runs, jobs, batch IDs, approvals).
 
 ## Getting started
 
 ```bash
+cp .env.example .env
+# fill in ANTHROPIC_API_KEY and REDUCTO_API_KEY if you want to run the pipeline.
+# The viewer works without either — it just reads the sample dataset.
+
 npm install
-npm run dev
+npm run studio:init   # creates data/studio.db
+npm run dev           # viewer on http://localhost:3210
 ```
 
-Visit <http://localhost:3210>. You should see one server (`r770`) under the
-`server` category.
+Visit <http://localhost:3210>. With the bundled sample dataset you'll see one
+server (Dell PowerEdge R770) under the `server` category.
 
 ## Pointing at your own data
 
-The viewer reads from `DATA_ROOT`, an environment variable resolved relative
-to the project root. The default is `data/sample`. To point at your own
-knowledgebase:
-
-```bash
-# .env.local (gitignored)
-DATA_ROOT=/abs/path/to/your/data
-```
-
-Your data directory must match this layout:
+Set `PRODUCT_MCP_DATA_DIR` in `.env`. Layout the studio expects:
 
 ```
-{DATA_ROOT}/
+{PRODUCT_MCP_DATA_DIR}/
 ├── schemas/
 │   ├── _base.md
-│   ├── {category}.md           # e.g. server.md, storage.md
-│   └── overlays/
-│       └── *.md
-└── {category}/                 # e.g. server, storage, networking
-    └── {vendor}/               # e.g. dell, hpe
-        └── {product-line}/     # e.g. poweredge
+│   ├── {category}.md          # server.md, storage.md, hci.md, ...
+│   └── overlays/*.md
+└── {category}/                # server, storage, networking, hci, chassis,
+    └── {vendor}/              #   software-defined-infrastructure
+        └── {product-line}/
             ├── {product-line}.md
-            └── {slug}/         # e.g. r770
+            └── {slug}/
                 ├── {slug}.md
-                ├── extraction.json
-                └── annotations.json   # optional
+                ├── sources.yaml       # produced by pull-sources
+                ├── source/            # PDFs + Reducto .md sidecars
+                ├── extraction.json    # produced by extract
+                └── annotations.json   # optional, flag UI
 ```
 
-`extraction.json` is the structured payload. Each scalar field has an
-`evidence` block (`source`, `anchor`, `page`, `quote`, `confidence`). See
-the included `data/sample/server/dell/poweredge/r770/extraction.json` for
-the canonical shape, and `data/sample/schemas/server.md` for the schema it
-satisfies.
+`extraction.json` carries per-value `evidence` blocks (`source`, `anchor`,
+`page`, `quote`, `confidence`). See the sample at
+`data/sample/server/dell/poweredge/r770/extraction.json` and the schema it
+satisfies at `data/sample/schemas/server.md`.
+
+## Running the extraction pipeline
+
+API keys required. The pipeline costs real money (Anthropic + Reducto). The
+`MAX_RUN_USD` env var caps any single submission.
+
+```bash
+# Dry run — estimate cost without calling the API
+npm run extract-one -- --product server/dell/poweredge/r770 --dry-run
+
+# Sync extraction — single Messages call, writes extraction.json on success
+npm run extract-one -- --product server/dell/poweredge/r770
+
+# Batch extraction — submit and poll
+npm run extract-one -- --product server/dell/poweredge/r770 --mode batch
+npm run worker     # in another terminal — polls every 30s
+```
+
+To run the orchestrator + worker together: `npm run dev:all`.
 
 ## Project layout
 
@@ -67,30 +82,41 @@ app/                  # Next.js app router pages
   page.tsx            # portfolio index
   products/[slug]/    # per-product detail, raw/parsed source views
   schemas/            # schema MD render
-  discovery/          # discovery MD render (optional)
+  pipeline/           # pipeline orchestration UI
   inbox/              # annotation inbox
-  api/annotations/    # annotation CRUD
-lib/                  # data-layer helpers; all read DATA_ROOT
-  repo-walk.ts        # DATA_ROOT definition + filesystem walking
-  portfolio.ts        # category/vendor/line/product discovery
+  api/                # annotation + pipeline routes
+lib/
+  env.ts              # zod-validated env
+  repo-walk.ts        # PRODUCT_MCP_DATA_DIR walking + KNOWN_CATEGORIES guard
+  portfolio.ts        # category × vendor × line discovery
   extractions.ts      # extraction.json loading + summaries
   schema-md.ts        # schema markdown rendering
   sources.ts          # source manifest parsing
   annotations.ts      # annotation file I/O
-data/sample/          # shipped sample dataset
+  pipeline/           # discover, parse, extract, audit, spotfix orchestration
+  integrations/       # anthropic, reducto, search clients
+  prompts/            # formalized prompts per pipeline stage
+  db/                 # studio orchestrator SQLite client + schema
+  jobs/               # background job queue
+worker/               # Anthropic Batch poll handler + Reducto handler
+scripts/              # CLI entry points (audit, extract-one, init, seed)
+data/sample/          # bundled sample dataset
 ```
 
 ## Contributing
 
 PRs welcome. A few conventions:
 
-- Keep the viewer **vendor-neutral**. Anything Dell- or HPE-specific belongs
-  in the data, not the code.
-- Don't add scripts that mutate the source data. The viewer is read-only by
-  design; data is produced by external tooling.
-- Path security: anything that resolves a user-controlled path must check
-  `startsWith(DATA_ROOT)` to prevent escape. See `lib/extractions.ts`
-  `resolveProductSourcePath` for the pattern.
+- **Vendor-neutral code, vendor-specific data.** Anything Dell- or HPE-specific
+  belongs in the data tree, not the code. The viewer + pipeline auto-discover
+  categories and vendors from the directory layout.
+- **Schemas drive extraction.** The extract pipeline walks the relevant schema
+  MD top-to-bottom. New fields go in the schema first; the extractor follows.
+- **Per-value evidence is load-bearing.** Every extracted scalar carries
+  `evidence: { source, anchor, page, quote, confidence }`. Don't introduce
+  fields that bypass this.
+- **Path security.** Anything that resolves a user-controlled path must check
+  `startsWith(REPO_ROOT)` to prevent escape.
 
 ## License
 

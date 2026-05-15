@@ -1,0 +1,942 @@
+{
+  "vendor": "Dell Technologies",
+  "category": "server",
+  "product_line": "poweredge",
+  "slug": "r770",
+  "model": "PowerEdge R770",
+  "description": "Dell's 2U dual-socket Intel Xeon 6 (E-core/P-core) rack server tuned for power-efficient virtualization, AI inferencing, cloud-native, hyperscale and scale-out database workloads — front- or rear-I/O variants with Smart Power and Cooling, DDR5 6400 MT/s, and PCIe Gen5 GPU support.",
+  "overlays": [],
+
+  "extraction_metadata": {
+    "schema_version": "server v2026-05-06 + overlays: []",
+    "extracted_at": "2026-05-07T16:00:00Z",
+    "extractor": "claude-opus-4-7",
+    "sources_consumed": [
+      "source/technical-guide.md",
+      "source/spec-sheet.md",
+      "../source/poweredge-servers-brochure.md"
+    ],
+    "notes": "General-purpose 17G PowerEdge core-line SKU; classification verified against ../source/poweredge-servers-brochure.md (R/T core line → general-purpose). Single LLM pass."
+  },
+
+  "server_type": {
+    "value": "general-purpose",
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Overview / Boost Datacenter Efficiencies and Performance",
+      "page": 1,
+      "quote": "The Dell PowerEdge R770 is a 2U, dual-socket rack server designed for high performance computing with optimal power efficiency and balanced performance to boost your data center productivity. It balances advanced computing power with virtualization, artificial intelligence inferencing, cloud-native applications, hyperscale workloads, and scale out databases.",
+      "confidence": 0.95
+    }
+  },
+
+  "workload_tags": {
+    "value": ["virtualization", "ai-inference", "cloud-native", "hyperscale", "database"],
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Ideal for: bullet list",
+      "page": 1,
+      "quote": "Ideal for: Virtualization, Artificial Intelligence Inferencing, Cloud-native applications, Hyperscale workloads, Scale out Databases",
+      "confidence": 0.95
+    }
+  },
+
+  "generation": {
+    "value": "17G",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Thermal design — Efficiency",
+      "page": 52,
+      "quote": "17G servers are designed with an efficient thermal solution to minimize power and airflow consumption, and/or acoustics for acoustical deployments.",
+      "confidence": 0.92
+    }
+  },
+
+  "announced_date": {"value": null, "evidence": {"source": "source-silent", "anchor": "no announce-date statement in tech-guide or spec-sheet"}},
+  "ga_year": {
+    "value": 2025,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 1 footnote",
+      "page": 7,
+      "quote": "Feature not available at product launch in September 2025.",
+      "confidence": 0.92
+    }
+  },
+  "ga_month": {
+    "value": 9,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 1 footnote",
+      "page": 7,
+      "quote": "Feature not available at product launch in September 2025.",
+      "confidence": 0.92
+    }
+  },
+  "eos_date": {"value": null, "evidence": {"source": "source-silent", "anchor": "no EOS date published in tech-guide or spec-sheet"}},
+  "eosp_date": {"value": null, "evidence": {"source": "source-silent", "anchor": "no EOSP date published in tech-guide or spec-sheet"}},
+  "eol_date": {"value": null, "evidence": {"source": "source-silent", "anchor": "no EOL date published in tech-guide or spec-sheet"}},
+  "predecessor": {
+    "value": "r760",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 2. Comparison of PowerEdge R770 and R760",
+      "page": 8,
+      "quote": "Comparison of PowerEdge R770 and R760",
+      "confidence": 0.85
+    }
+  },
+  "successor": {"value": null, "evidence": {"source": "source-silent", "anchor": "no successor named (R770 is current 17G flagship core SKU)"}},
+
+  "form_factor": {
+    "value": "rack",
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Form Factor row",
+      "page": 2,
+      "quote": "2U rack server",
+      "confidence": 0.99
+    }
+  },
+  "rack_units": {
+    "value": 2,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Form Factor row",
+      "page": 2,
+      "quote": "2U rack server",
+      "confidence": 0.99
+    }
+  },
+  "height_mm": {
+    "value": 86.8,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Dimensions and Weight",
+      "page": 2,
+      "quote": "Height – 86.8 mm (3.42 inches)",
+      "confidence": 0.99
+    }
+  },
+  "width_mm": {
+    "value": 482.0,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Dimensions and Weight",
+      "page": 2,
+      "quote": "Width – 482 mm (18.97 inches)",
+      "confidence": 0.99
+    }
+  },
+  "depth_mm": {
+    "value": 814.52,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Dimensions and Weight (front I/O configuration depth)",
+      "page": 2,
+      "quote": "Depth (for front I/O configuration): 814.52 mm (32.07 inches) without bezel",
+      "confidence": 0.95
+    }
+  },
+  "weight_kg": {
+    "value": 32.08,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 43. PowerEdge R770 system weight (max-config = 24 x 2.5-inch SATA drives)",
+      "page": 72,
+      "quote": "24 x 2.5-inch SATA drives | 32.08 kg (70.72 pounds)",
+      "confidence": 0.9
+    }
+  },
+
+  "supports_air": {
+    "value": true,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Cooling Options",
+      "page": 2,
+      "quote": "Air cooling and Direct Liquid Cooling",
+      "confidence": 0.99
+    }
+  },
+  "supports_dlc": {
+    "value": true,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Cooling Options",
+      "page": 2,
+      "quote": "Air cooling and Direct Liquid Cooling. Note: DLC is a rack solution and requires rack manifolds and a cooling distribution unit (CDU) to operate.",
+      "confidence": 0.99
+    }
+  },
+  "supports_front_io": {
+    "value": true,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Overview",
+      "page": 1,
+      "quote": "These servers are available in rear I/O hot aisle and front I/O cold aisle configurations.",
+      "confidence": 0.98
+    }
+  },
+  "fan_count_max": {
+    "value": 6,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Fans",
+      "page": 2,
+      "quote": "Up to 6 hot swappable fans",
+      "confidence": 0.99
+    }
+  },
+  "fan_redundancy": {
+    "value": "N+1",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Thermal design — Cooling redundancy",
+      "page": 52,
+      "quote": "The R770 allows N+1 fan redundancy, allowing continuous operation with one fan failure in the system.",
+      "confidence": 0.95
+    }
+  },
+
+  "ashrae_class_max": {
+    "value": "A4",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 52. Common Environmental Specifications for ASHRAE A2, A3, A4 and Rugged environment",
+      "page": 76,
+      "quote": "Common Environmental Specifications for ASHRAE A2, A3, A4 and Rugged environment",
+      "confidence": 0.9
+    }
+  },
+  "operating_temp_min_c": {
+    "value": 10,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Thermal design",
+      "page": 52,
+      "quote": "This is done across a wide range of ambient temperatures from 10°C to 35°C (50°F to 95°F) and to extended ambient temperature ranges.",
+      "confidence": 0.92
+    }
+  },
+  "operating_temp_max_c": {
+    "value": 35,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Thermal design",
+      "page": 52,
+      "quote": "ambient temperatures from 10°C to 35°C (50°F to 95°F)",
+      "confidence": 0.95
+    }
+  },
+
+  "socket_count": {
+    "value": 2,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Processor row",
+      "page": 2,
+      "quote": "Two Intel Xeon 6 Processors with up to 144 E-cores or 86 P-cores per processor",
+      "confidence": 0.99
+    }
+  },
+  "processor_family": {
+    "value": ["intel-xeon-6-pcore", "intel-xeon-6-ecore"],
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Processor features / Tables 19-20",
+      "page": 30,
+      "quote": "Intel Xeon 6 processors supported in R770 - E-Core; Intel Xeon 6 processors supported in R770 - P-Core",
+      "confidence": 0.99
+    }
+  },
+  "memory_channels_per_socket": {
+    "value": 8,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "System memory guidelines",
+      "page": 33,
+      "quote": "Your system memory is organized into eight channels per processor (two memory sockets per channel), 16 memory sockets per processor and 32 memory sockets per system.",
+      "confidence": 0.99
+    }
+  },
+
+  "cpu_skus": [
+    {"model": "Xeon 6710E", "family": "intel-xeon-6-ecore", "clock_ghz": 2.4, "cache_mb": 96, "cores": 64, "threads": 64, "memory_speed_mt_s": 6400, "tdp_w": 205, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6710E | 2.4 | 96 | 24 | 64 | 64 | Turbo | 6400 | 1 TB | 205 W", "confidence": 0.95}},
+    {"model": "Xeon 6740E", "family": "intel-xeon-6-ecore", "clock_ghz": 2.4, "cache_mb": 96, "cores": 96, "threads": 96, "memory_speed_mt_s": 6400, "tdp_w": 250, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6740E | 2.4 | 96 | 24 | 96 | 96 | Turbo | 6400 | 1 TB | 250 W", "confidence": 0.95}},
+    {"model": "Xeon 6746E", "family": "intel-xeon-6-ecore", "clock_ghz": 2.0, "cache_mb": 96, "cores": 112, "threads": 112, "memory_speed_mt_s": 6400, "tdp_w": 250, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6746E | 2 | 96 | 24 | 112 | 112 | Turbo | 6400 | 1 TB | 250 W", "confidence": 0.95}},
+    {"model": "Xeon 6756E", "family": "intel-xeon-6-ecore", "clock_ghz": 1.8, "cache_mb": 96, "cores": 128, "threads": 128, "memory_speed_mt_s": 6400, "tdp_w": 225, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6756E | 1.8 | 96 | 24 | 128 | 128 | Turbo | 6400 | 1 TB | 225 W", "confidence": 0.95}},
+    {"model": "Xeon 6766E", "family": "intel-xeon-6-ecore", "clock_ghz": 1.9, "cache_mb": 108, "cores": 144, "threads": 144, "memory_speed_mt_s": 6400, "tdp_w": 250, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6766E | 1.9 | 108 | 24 | 144 | 144 | Turbo | 6400 | 1 TB | 250 W", "confidence": 0.95}},
+    {"model": "Xeon 6780E", "family": "intel-xeon-6-ecore", "clock_ghz": 2.2, "cache_mb": 108, "cores": 144, "threads": 144, "memory_speed_mt_s": 6400, "tdp_w": 330, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 19. Intel Xeon 6 processors supported in R770 - E-Core", "page": 30, "quote": "6780E | 2.2 | 108 | 24 | 144 | 144 | Turbo | 6400 | 1 TB | 330 W", "confidence": 0.95}},
+    {"model": "Xeon 6505P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.2, "cache_mb": 48, "cores": 12, "threads": 24, "memory_speed_mt_s": 6400, "tdp_w": 150, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6505P | 2.2 | 48 | 24 | 12 | 24 | Turbo | 6400 | 4 TB | 150 W", "confidence": 0.95}},
+    {"model": "Xeon 6507P", "family": "intel-xeon-6-pcore", "clock_ghz": 3.5, "cache_mb": 48, "cores": 8, "threads": 16, "memory_speed_mt_s": 6400, "tdp_w": 150, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6507P | 3.5 | 48 | 24 | 8 | 16 | Turbo | 6400 | 4 TB | 150 W", "confidence": 0.95}},
+    {"model": "Xeon 6515P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.3, "cache_mb": 72, "cores": 16, "threads": 32, "memory_speed_mt_s": 6400, "tdp_w": 150, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6515P | 2.3 | 72 | 24 | 16 | 32 | Turbo | 6400 | 4 TB | 150 W", "confidence": 0.95}},
+    {"model": "Xeon 6517P", "family": "intel-xeon-6-pcore", "clock_ghz": 3.2, "cache_mb": 72, "cores": 16, "threads": 32, "memory_speed_mt_s": 6400, "tdp_w": 190, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6517P | 3.2 | 72 | 24 | 16 | 32 | Turbo | 6400 | 4 TB | 190 W", "confidence": 0.95}},
+    {"model": "Xeon 6520P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.4, "cache_mb": 144, "cores": 24, "threads": 48, "memory_speed_mt_s": 6400, "tdp_w": 210, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6520P | 2.4 | 144 | 24 | 24 | 48 | Turbo | 6400 | 4 TB | 210 W", "confidence": 0.95}},
+    {"model": "Xeon 6527P", "family": "intel-xeon-6-pcore", "clock_ghz": 3.0, "cache_mb": 144, "cores": 24, "threads": 48, "memory_speed_mt_s": 6400, "tdp_w": 255, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6527P | 3.0 | 144 | 24 | 24 | 48 | Turbo | 6400 | 4 TB | 255 W", "confidence": 0.95}},
+    {"model": "Xeon 6530P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.3, "cache_mb": 144, "cores": 32, "threads": 64, "memory_speed_mt_s": 6400, "tdp_w": 225, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6530P | 2.3 | 144 | 24 | 32 | 64 | Turbo | 6400 | 4 TB | 225 W", "confidence": 0.95}},
+    {"model": "Xeon 6714P", "family": "intel-xeon-6-pcore", "clock_ghz": 4.0, "cache_mb": 48, "cores": 8, "threads": 16, "memory_speed_mt_s": 6400, "tdp_w": 165, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6714P | 4.0 | 48 | 24 | 8 | 16 | Turbo | 6400 | 4 TB | 165 W", "confidence": 0.95}},
+    {"model": "Xeon 6724P", "family": "intel-xeon-6-pcore", "clock_ghz": 3.6, "cache_mb": 72, "cores": 16, "threads": 32, "memory_speed_mt_s": 6400, "tdp_w": 210, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6724P | 3.6 | 72 | 24 | 16 | 32 | Turbo | 6400 | 4 TB | 210 W", "confidence": 0.95}},
+    {"model": "Xeon 6730P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.5, "cache_mb": 288, "cores": 32, "threads": 64, "memory_speed_mt_s": 6400, "tdp_w": 250, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6730P | 2.5 | 288 | 24 | 32 | 64 | Turbo | 6400 | 4 TB | 250 W", "confidence": 0.95}},
+    {"model": "Xeon 6736P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.0, "cache_mb": 144, "cores": 36, "threads": 72, "memory_speed_mt_s": 6400, "tdp_w": 205, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6736P | 2 | 144 | 24 | 36 | 72 | Turbo | 6400 | 4 TB | 205 W", "confidence": 0.95}},
+    {"model": "Xeon 6737P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.9, "cache_mb": 144, "cores": 32, "threads": 64, "memory_speed_mt_s": 6400, "tdp_w": 270, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core (continued)", "page": 31, "quote": "6737P | 2.9 | 144 | 24 | 32 | 64 | Turbo | 6400 | 4 TB | 270 W", "confidence": 0.95}},
+    {"model": "Xeon 6740P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.1, "cache_mb": 288, "cores": 48, "threads": 96, "memory_speed_mt_s": 6400, "tdp_w": 270, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core", "page": 30, "quote": "6740P | 2.1 | 288 | 24 | 48 | 96 | Turbo | 6400 | 4 TB | 270 W", "confidence": 0.95}},
+    {"model": "Xeon 6747P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.7, "cache_mb": 288, "cores": 48, "threads": 96, "memory_speed_mt_s": 6400, "tdp_w": 330, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core", "page": 30, "quote": "6747P | 2.7 | 288 | 24 | 48 | 96 | Turbo | 6400 | 4 TB | 330 W", "confidence": 0.95}},
+    {"model": "Xeon 6760P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.2, "cache_mb": 320, "cores": 64, "threads": 128, "memory_speed_mt_s": 6400, "tdp_w": 330, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core", "page": 30, "quote": "6760P | 2.2 | 320 | 24 | 64 | 128 | Turbo | 6400 | 4 TB | 330 W", "confidence": 0.95}},
+    {"model": "Xeon 6767P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.4, "cache_mb": 336, "cores": 64, "threads": 128, "memory_speed_mt_s": 6400, "tdp_w": 350, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core", "page": 30, "quote": "6767P | 2.4 | 336 | 24 | 64 | 128 | Turbo | 6400 | 4 TB | 350 W", "confidence": 0.95}},
+    {"model": "Xeon 6787P", "family": "intel-xeon-6-pcore", "clock_ghz": 2.0, "cache_mb": 336, "cores": 86, "threads": 172, "memory_speed_mt_s": 6400, "tdp_w": 350, "requires_dlc": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 20. Intel Xeon 6 processors supported in R770 - P-Core", "page": 30, "quote": "6787P | 2 | 336 | 24 | 86 | 172 | Turbo | 6400 | 4 TB | 350 W", "confidence": 0.95}}
+  ],
+
+  "dimm_slots": {
+    "value": 32,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Memory row",
+      "page": 2,
+      "quote": "32 DDR5 DIMM slots, supports RDIMM 8 TB max, speeds up to 6400 MT/s",
+      "confidence": 0.99
+    }
+  },
+  "max_memory_gb": {
+    "value": 8192,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Memory row",
+      "page": 2,
+      "quote": "32 DDR5 DIMM slots, supports RDIMM 8 TB max",
+      "confidence": 0.95
+    }
+  },
+  "max_memory_speed_mt_s_1dpc": {
+    "value": 6400,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 21. Memory technology",
+      "page": 32,
+      "quote": "Transfer speed: 6400 MT/s(1DPC) and 5200 MT/s (2DPC)",
+      "confidence": 0.99
+    }
+  },
+  "max_memory_speed_mt_s_2dpc": {
+    "value": 5200,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 21. Memory technology",
+      "page": 32,
+      "quote": "Transfer speed: 6400 MT/s(1DPC) and 5200 MT/s (2DPC)",
+      "confidence": 0.99
+    }
+  },
+  "supports_cxl": {
+    "value": true,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 1. New technologies — Intel Xeon 6 processors",
+      "page": 6,
+      "quote": "CXL 2.0: support. NOTE: CXL 2.0 is supported only on Intel Xeon 6 P-core processors",
+      "confidence": 0.95
+    }
+  },
+  "cxl_version": {
+    "value": "2.0",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 1. New technologies — Intel Xeon 6 processors",
+      "page": 6,
+      "quote": "CXL 2.0: support",
+      "confidence": 0.95
+    }
+  },
+  "cxl_supported_types": {
+    "value": ["Type-3"],
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 27. CXL memory",
+      "page": 34,
+      "quote": "Total CXL AIC configuration ... 4 x AIC (96 GB x 4) ... 4608 GB total system memory capacity",
+      "confidence": 0.85
+    }
+  },
+  "cxl_form_factor": {
+    "value": "AIC",
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 27. CXL memory + constraints",
+      "page": 35,
+      "quote": "x8 AIC refers to lane electrical connectivity only. Must still be populated in a x16 sized physical CEM slot.",
+      "confidence": 0.95
+    }
+  },
+  "cxl_supported_families": {
+    "value": ["intel-xeon-6-pcore"],
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 1. New technologies — Intel Xeon 6 processors",
+      "page": 6,
+      "quote": "CXL 2.0 is supported only on Intel Xeon 6 P-core processors",
+      "confidence": 0.95
+    }
+  },
+  "cxl_max_devices_total": {
+    "value": 4,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 27. CXL memory",
+      "page": 34,
+      "quote": "4 x AIC (96 GB x 4)",
+      "confidence": 0.9
+    }
+  },
+  "cxl_max_devices_per_cpu": {
+    "value": 2,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "CXL constraints",
+      "page": 35,
+      "quote": "Cannot support more than two AICs per CPU.",
+      "confidence": 0.95
+    }
+  },
+  "cxl_max_total_memory_gb": {
+    "value": 2048,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 27. CXL memory (continued)",
+      "page": 35,
+      "quote": "32 x 128 GB native; 4 x AIC (128 GB x 4); total system memory capacity 6144 GB (i.e. 2048 GB CXL)",
+      "confidence": 0.85
+    }
+  },
+  "cxl_total_system_memory_gb": {
+    "value": 6144,
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "Table 27. CXL memory (continued)",
+      "page": 35,
+      "quote": "32 x 128 GB; 4 x AIC (128* GB x 4); 6144 GB total system memory capacity",
+      "confidence": 0.95
+    }
+  },
+  "cxl_constraints": {
+    "value": [
+      "Only the above Native DIMM configurations are supported.",
+      "CXL requires fully populated Native DIMMs.",
+      "Cannot select under 4x DIMMs on AIC.",
+      "Cannot support more than two AICs per CPU.",
+      "256 GB within AIC cannot be thermally supported.",
+      "x8 AIC refers to lane electrical connectivity only. Must still be populated in a x16 sized physical CEM slot."
+    ],
+    "evidence": {
+      "source": "source/technical-guide.md",
+      "anchor": "CXL memory constraints note bullets (page 35)",
+      "page": 35,
+      "quote": "Only the above Native DIMM configurations are supported. CXL requires fully populated Native DIMMs. Cannot select under 4x DIMMs on AIC. Cannot support more than two AICs per CPU. 256 GB within AIC cannot be thermally supported. x8 AIC refers to lane electrical connectivity only. Must still be populated in a x16 sized physical CEM slot.",
+      "confidence": 0.95
+    }
+  },
+
+  "cxl_configurations": [
+    {
+      "config_label": "RC7-96GB-launch",
+      "riser_code": "RC7",
+      "slots_used": ["Slot 1", "Slot 2", "Slot 7", "Slot 8"],
+      "native_dimm_config": "32 x 96 GB",
+      "native_dimm_capacity_gb": 3072,
+      "cxl_aic_count": 4,
+      "cxl_dimm_count_per_aic": 4,
+      "cxl_dimm_capacity_gb": 96,
+      "cxl_total_capacity_gb": 1536,
+      "total_system_memory_gb": 4608,
+      "available_at_launch": true,
+      "notes": "RC7 with CPU0 ports Slot 7/8, CPU1 ports Slot 1/2",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 27. CXL memory", "page": 34,
+        "quote": "R770 | RC7 | Slot 7/8 | Slot 1/2 | 32 x 96 GB | 3072 GB | 4 x AIC (96 GB x 4) | 4608 GB", "confidence": 0.95}
+    },
+    {
+      "config_label": "RC7-128GB-roadmap",
+      "riser_code": "RC7",
+      "slots_used": ["Slot 1", "Slot 2", "Slot 7", "Slot 8"],
+      "native_dimm_config": "32 x 128 GB",
+      "native_dimm_capacity_gb": 4096,
+      "cxl_aic_count": 4,
+      "cxl_dimm_count_per_aic": 4,
+      "cxl_dimm_capacity_gb": 128,
+      "cxl_total_capacity_gb": 2048,
+      "total_system_memory_gb": 6144,
+      "available_at_launch": false,
+      "notes": "128 GB-on-AIC config marked with asterisk — feature not available at product launch in June 2025",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 27. CXL memory (continued)", "page": 35,
+        "quote": "R770 | RC7 | Slot 7/8 | Slot 1/2 | 32 x 128 GB | 4096 GB | 4 x AIC (128* GB x 4) | 6144 GB", "confidence": 0.92}
+    }
+  ],
+
+  "supported_dimms": [
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-ecore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": null, "capacity_gb": 32, "ranks": "2R", "width": "x8",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (E-core column)", "page": 33, "quote": "RDIMM | 2R | 32 GB | DDR5 (1.1 V), 6400 MT/s | E-core 1DPC: Up to 6400 MT/s; 2DPC: N/A", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-ecore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": 5200, "capacity_gb": 64, "ranks": "2R", "width": "x4",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (continued, E-core column)", "page": 34, "quote": "64 GB | DDR5 (1.1 V), 6400 MT/s | E-core 1DPC: Up to 6400 MT/s; 2DPC: Up to 5200 MT/s", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": null, "capacity_gb": 16, "ranks": "1R", "width": "x8",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (P-core column)", "page": 33, "quote": "RDIMM | 1R | 16 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: Up to 6400 MT/s; 2DPC: N/A", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": null, "capacity_gb": 32, "ranks": "2R", "width": "x8",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (P-core column)", "page": 33, "quote": "RDIMM | 2R | 32 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: Up to 6400 MT/s; 2DPC: Up to 5200 MT/s", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": 5200, "capacity_gb": 64, "ranks": "2R", "width": "x4",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (continued, P-core column)", "page": 34, "quote": "64 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: Up to 6400 MT/s; 2DPC: Up to 5200 MT/s", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": 5200, "capacity_gb": 96, "ranks": "2R", "width": "x4",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (continued, P-core column)", "page": 34, "quote": "96 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: Up to 6400 MT/s; 2DPC: Up to 5200 MT/s", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": 6400, "speed_mt_s_2dpc": 5200, "capacity_gb": 128, "ranks": "2R", "width": "x4",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (continued, P-core column)", "page": 34, "quote": "128 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: Up to 6400 MT/s; 2DPC: Up to 5200 MT/s", "confidence": 0.92}},
+    {"dimm_type": "RDIMM", "family": "intel-xeon-6-pcore", "speed_mt_s_1dpc": null, "speed_mt_s_2dpc": 5200, "capacity_gb": 256, "ranks": "8R", "width": "x4",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 25. Supported memory matrix (continued, P-core 256 GB row)", "page": 34, "quote": "8R | 256 GB | DDR5 (1.1 V), 6400 MT/s | P-core 1DPC: N/A; 2DPC: Up to 5200 MT/s", "confidence": 0.9}}
+  ],
+
+  "max_drive_count": {
+    "value": 40,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Front and Rear Bays",
+      "page": 2,
+      "quote": "Up to 40 x EDSFF E3.S Gen5 NVMe max 2457.6 TB",
+      "confidence": 0.99
+    }
+  },
+  "max_raw_capacity_tb": {
+    "value": 2457.6,
+    "evidence": {
+      "source": "source/spec-sheet.md",
+      "anchor": "Front and Rear Bays",
+      "page": 2,
+      "quote": "Up to 40 x EDSFF E3.S Gen5 NVMe max 2457.6 TB",
+      "confidence": 0.99
+    }
+  },
+
+  "drive_configurations": [
+    {"description": "No backplane configuration", "drive_count": 0, "drive_form_factor": "n/a", "drive_protocols": [], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 0,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "No backplane configuration", "confidence": 0.95}},
+    {"description": "Up to 8 x EDSFF E3.S Gen5 NVMe (front I/O)", "drive_count": 8, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": false, "is_front_io": true, "max_raw_capacity_tb": 491.52,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 8 x EDSFF E3.S Gen5 NVMe max 491.52 TB also comes with FIO configuration", "confidence": 0.95}},
+    {"description": "Up to 16 x EDSFF E3.S Gen5 NVMe (front I/O)", "drive_count": 16, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": false, "is_front_io": true, "max_raw_capacity_tb": 983.04,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 16 x EDSFF E3.S Gen5 NVMe max 983.04 TB also comes with FIO configuration", "confidence": 0.95}},
+    {"description": "Up to 16 x EDSFF E3.S Gen5 NVMe", "drive_count": 16, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 983.04,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Internal storage configuration list", "page": 36, "quote": "Up to 16 x EDSFF E3.S NVMe drives", "confidence": 0.95}},
+    {"description": "Up to 32 x EDSFF E3.S Gen5 NVMe", "drive_count": 32, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 1966.08,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 32 x EDSFF E3.S Gen5 NVMe max 1966.08 TB", "confidence": 0.95}},
+    {"description": "Up to 40 x EDSFF E3.S Gen5 NVMe", "drive_count": 40, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 2457.6,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 40 x EDSFF E3.S Gen5 NVMe max 2457.6 TB", "confidence": 0.95}},
+    {"description": "Up to 4 x EDSFF E3.S Gen5 NVMe (rear)", "drive_count": 4, "drive_form_factor": "E3.S", "drive_protocols": ["NVMe"], "is_rear": true, "is_front_io": false, "max_raw_capacity_tb": 245.76,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 4 x EDSFF E3.S Gen5 NVMe max 245.76 TB on the rear", "confidence": 0.95}},
+    {"description": "Up to 8 x 2.5\" SATA/NVMe", "drive_count": 8, "drive_form_factor": "2.5-inch", "drive_protocols": ["SATA", "NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 491.52,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 8 x 2.5 inch SATA/NVMe max 491.52 TB", "confidence": 0.95}},
+    {"description": "Up to 8 x 2.5\" Universal", "drive_count": 8, "drive_form_factor": "2.5-inch", "drive_protocols": ["SATA", "NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 491.52,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 8 x 2.5-inch Universal max 491.52 TB", "confidence": 0.92}},
+    {"description": "Up to 16 x 2.5\" SATA", "drive_count": 16, "drive_form_factor": "2.5-inch", "drive_protocols": ["SATA"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 61.44,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 16 x 2.5 inch SATA max 61.44TB", "confidence": 0.95}},
+    {"description": "Up to 24 x 2.5\" SATA", "drive_count": 24, "drive_form_factor": "2.5-inch", "drive_protocols": ["SATA"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 92.16,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 24 x 2.5 inch SATA max 92.16 TB", "confidence": 0.95}},
+    {"description": "Up to 16 x 2.5\" SATA + 8 x 2.5\" NVMe", "drive_count": 24, "drive_form_factor": "2.5-inch", "drive_protocols": ["SATA", "NVMe"], "is_rear": false, "is_front_io": false, "max_raw_capacity_tb": 552.96,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Front and Rear Bays", "page": 2, "quote": "Up to 16 x 2.5 inch SATA + 8 x 2.5-inch NVME max 552.96 TB", "confidence": 0.95}}
+  ],
+
+  "supported_drives": [
+    {"form_factor": "E3.S", "drive_type": "NVMe-SSD", "speed": "Gen5", "drive_class": "DC NVMe", "capacities": ["1.6TB", "1.92TB", "3.2TB", "3.84TB"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 28. Supported drives", "page": 36, "quote": "EDSFF E3.S | DC NVMe | Gen5 | SSD | 1.6 TB, 3.2 TB, 1.92 TB, 3.84 TB", "confidence": 0.95}},
+    {"form_factor": "E3.S", "drive_type": "NVMe-SSD", "speed": "Gen5", "drive_class": null, "capacities": ["3.2TB", "3.84TB", "6.4TB", "7.68TB", "15.36TB", "30.72TB", "61.44TB"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 28. Supported drives", "page": 36, "quote": "EDSFF E3.S | NVMe | Gen5 | SSD | 3.2 TB, 6.4 TB, 3.84 TB, 7.68 TB, 15.36 TB, 30.72 TB, 61.44 TB", "confidence": 0.95}},
+    {"form_factor": "2.5-inch", "drive_type": "SATA-SSD", "speed": "6Gb SATA", "drive_class": null, "capacities": ["480GB", "960GB", "1.92TB", "3.84TB"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 28. Supported drives", "page": 36, "quote": "2.5 inches | SATA | 6 Gb | SSD | 480 GB, 960 GB, 1.92 TB, 3.84 TB", "confidence": 0.95}},
+    {"form_factor": "2.5-inch", "drive_type": "NVMe-SSD", "speed": "Gen4", "drive_class": null, "capacities": ["400GB", "800GB", "960GB", "1.6TB", "1.92TB", "3.2TB", "3.84TB", "6.4TB", "7.68TB", "12.8TB", "15.63TB", "30.72TB", "61.44TB"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 28. Supported drives", "page": 36, "quote": "2.5 inches | NVMe | Gen4 | SSD | 400 GB, 800 GB, 960 GB, 1.6 TB, 1.92 TB, 3.2 TB, 3.84 TB, 6.4 TB, 7.68 TB, 12.8 TB, 15.63 TB, 30.72 TB, 61.44 TB", "confidence": 0.95}}
+  ],
+
+  "storage_controllers": [
+    {"name": "PERC H965i Front DC-MHS", "category": "Internal RAID", "is_external": false, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": null, "max_drive_support": null,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers row", "page": 2, "quote": "Internal controllers: Front PERC H965i, Front PERC H975i, Front PERC H365i", "confidence": 0.92}},
+    {"name": "PERC H975i Front DC-MHS", "category": "Internal RAID", "is_external": false, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": null, "max_drive_support": null,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers row", "page": 2, "quote": "Internal controllers: Front PERC H965i, Front PERC H975i, Front PERC H365i", "confidence": 0.92}},
+    {"name": "PERC H365i Front DC-MHS", "category": "Internal RAID", "is_external": false, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": null, "max_drive_support": null,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers row", "page": 2, "quote": "Internal controllers: Front PERC H965i, Front PERC H975i, Front PERC H365i", "confidence": 0.92}},
+    {"name": "PERC H965e", "category": "External RAID", "is_external": true, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": null, "max_drive_support": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 2. Comparison of PowerEdge R770 and R760 (External controllers)", "page": 9, "quote": "External controllers: H965e, HBA465e", "confidence": 0.9}},
+    {"name": "HBA465e", "category": "HBA", "is_external": true, "pcie_gen": null, "cache_size_gb": 0, "cache_class": "none", "raid_levels": [], "max_drive_support": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 2. Comparison of PowerEdge R770 and R760 (External controllers)", "page": 9, "quote": "External controllers: H965e, HBA465e", "confidence": 0.9}},
+    {"name": "BOSS-N1 DC-MHS", "category": "Internal Boot", "is_external": false, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": [1], "max_drive_support": 2,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers row (Internal Boot)", "page": 2, "quote": "Internal Boot: Boot Optimized Storage Subsystem (BOSS-N1 DC-MHS): HWRAID 1, 2 x M.2 NVMe SSDs", "confidence": 0.95}},
+    {"name": "M.2 Interposer board (DC-MHS)", "category": "Internal Boot", "is_external": false, "pcie_gen": null, "cache_size_gb": null, "cache_class": null, "raid_levels": [], "max_drive_support": 2,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers row (Internal Boot)", "page": 2, "quote": "M.2 Interposer board (DC-MHS): 2 x M.2 NVMe SSDs or USB", "confidence": 0.9}}
+  ],
+
+  "boot_drives": [
+    {"form_factor": "M.2-NVMe", "capacities": ["480GB", "960GB"], "controller": "BOSS-N1 DC-MHS", "redundancy": "raid-1", "notes": "HWRAID 1, 2 x M.2 NVMe SSDs; Slot 34 (Front BOSS) or Slot 6 (Rear BOSS).",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 2. Comparison of PowerEdge R770 and R760 (Internal boot)", "page": 9, "quote": "Boot Optimized Storage Subsystem (BOSS-N1 DC-MHS): HWRAID 1, 2 x M.2 NVMe SSDs 480 GB or 960 GB", "confidence": 0.95}},
+    {"form_factor": "M.2-NVMe", "capacities": null, "controller": "M.2 Interposer board (DC-MHS)", "redundancy": "single", "notes": "M.2 Interposer board (DC-MHS): 2 x M.2 NVMe SSDs (no HW RAID); per spec sheet.",
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Storage controllers (Internal Boot)", "page": 2, "quote": "M.2 Interposer board (DC-MHS): 2 x M.2 NVMe SSDs or USB", "confidence": 0.85}}
+  ],
+
+  "supports_gpu": {
+    "value": true,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "Up to 6 x 75 W FHHL or up to 2 x 450 W DWFL", "confidence": 0.99}
+  },
+  "supports_pcie_gpu": {
+    "value": true,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "Up to 6 x 75 W FHHL or up to 2 x 450 W DWFL", "confidence": 0.99}
+  },
+  "supports_double_width_gpu": {
+    "value": true,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "up to 2 x 450 W DWFL", "confidence": 0.99}
+  },
+  "max_gpu_power_w": {
+    "value": 450,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "Up to 6 x 75 W FHHL or up to 2 x 450 W DWFL", "confidence": 0.95}
+  },
+
+  "gpu_form_factor_support": [
+    {"form_factor": "single-width", "max_count": 6, "max_power_w_per_gpu": 75,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "Up to 6 x 75 W FHHL", "confidence": 0.98}},
+    {"form_factor": "double-width", "max_count": 2, "max_power_w_per_gpu": 450,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "GPU options", "page": 2, "quote": "up to 2 x 450 W DWFL", "confidence": 0.98}}
+  ],
+
+  "supported_gpus": [
+    {"gpu": "NVIDIA L4", "vendor": "NVIDIA", "form_factor": "single-width", "power_w": 72, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC1", "RC2", "RC7"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA L4 | 2 | RC 1, RC 2, RC 7 | x16 | SW | 72 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA L4", "vendor": "NVIDIA", "form_factor": "single-width", "power_w": 72, "max_qty": 4, "pcie": "Gen5 x16", "riser_codes": ["RC6-1", "RC6-2", "RC11-1", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA L4 | 4 | RC 6-1, RC 6-2 , RC 11-1, RC 11-2 | x16 | SW | 72 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA L4", "vendor": "NVIDIA", "form_factor": "single-width", "power_w": 72, "max_qty": 6, "pcie": "Gen5 x16", "riser_codes": ["RC12"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA L4 | 6 | RC 12 | x16 | SW | 72 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA H100 NVL", "vendor": "NVIDIA", "form_factor": "double-width", "power_w": 400, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC6-2", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA H100 NVL | 2 | RC 6-2, RC 11-2 | x16 | DW | 400 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA L40S", "vendor": "NVIDIA", "form_factor": "double-width", "power_w": 350, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC6-2", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA L40s | 2 | RC 6-2, RC 11-2 | x16 | DW | 350 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA A16", "vendor": "NVIDIA", "form_factor": "double-width", "power_w": 250, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC6-2", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA A16 | 2 | RC 6-2, RC 11-2 | x16 | DW | 250 W", "confidence": 0.95}},
+    {"gpu": "NVIDIA H200 NVL", "vendor": "NVIDIA", "form_factor": "double-width", "power_w": 450, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC6-2", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA H200 NVL | 2 | RC 6-2, RC 11-2 | x16 | DW | 450 W. NOTE: The NVIDIA H200 NVL and NVIDIA RTX Pro 6000 are designed to support up to 600 W, however, they are power capped to 450 W support on R770.", "confidence": 0.95}},
+    {"gpu": "NVIDIA RTX PRO 6000", "vendor": "NVIDIA", "form_factor": "double-width", "power_w": 450, "max_qty": 2, "pcie": "Gen5 x16", "riser_codes": ["RC6-2", "RC11-2"],
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 29. R770 NVIDIA GPU support list", "page": 37, "quote": "NVIDIA RTX Pro 6000 | 2 | RC 6-2, RC 11-2 | x16 | DW | 450 W", "confidence": 0.95}}
+  ],
+
+  "supports_dpu": {
+    "value": true,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "DPU options", "page": 2, "quote": "DPU options: NVIDIA BlueField-3 2x200 GbE B3220; NVIDIA BlueField-3 1x400 GbE B3140H", "confidence": 0.99}
+  },
+  "dpu_support_mode": {
+    "value": "pcie-card",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "DPU restrictions (page 97-98)", "page": 97, "quote": "DPUs are supported on designated riser configs of RC1, RC2, RC6-2 and RC11-2.", "confidence": 0.92}
+  },
+
+  "supported_dpus": [
+    {"model": "BlueField-3 B3220", "vendor": "NVIDIA", "port_speed": "200 GbE", "port_count": 2,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "DPU options", "page": 2, "quote": "NVIDIA BlueField-3 2x200 GbE B3220", "confidence": 0.99}},
+    {"model": "BlueField-3 B3140H", "vendor": "NVIDIA", "port_speed": "400 GbE", "port_count": 1,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "DPU options", "page": 2, "quote": "NVIDIA BlueField-3 1x400 GbE B3140H", "confidence": 0.99}}
+  ],
+
+  "pcie_max_generation": {
+    "value": "Gen5",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 1. New technologies — PCIe Gen", "page": 6, "quote": "PCIe Gen | Gen5 @32 GT/s", "confidence": 0.99}
+  },
+  "max_pcie_slots": {
+    "value": 8,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 1. New technologies — PCIe Slot", "page": 6, "quote": "Up to 8x Gen5 PCIe slots and max 6 slots for x16 width", "confidence": 0.99}
+  },
+  "max_rear_pcie_slots": {
+    "value": 8,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe (rear configuration)", "page": 3, "quote": "Upto eight PCIe slots (x8 and x16 connectors): Slot 1 ... Slot 9 (rear)", "confidence": 0.9}
+  },
+  "max_front_pcie_slots": {
+    "value": 2,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe (front configuration)", "page": 3, "quote": "Upto two PCIe slots ( x16 connectors): Slot 31 1 x 16 Gen5 ... on front Riser; Slot 36 1 x 16 Gen5 ... on front Riser", "confidence": 0.9}
+  },
+
+  "pcie_slots": [
+    {"slot_name": "Slot 1", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x8", "pcie_gen": "Gen5", "power_class": "≤75W", "riser_codes": ["RC0", "RC6-1", "RC6-2", "RC7", "RC11-1", "RC11-2", "RC12"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 1 1 x 8 Gen5 Full Height - Half Length", "confidence": 0.9}},
+    {"slot_name": "Slot 2", "processor": "via riser", "height": "FH", "length": "FL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": "DLC", "riser_codes": ["RC6-2", "RC11-2"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 2 1 x 16 Gen5 Dual Width Full Length or 1 x 8 Gen5 Full Height - Half Length", "confidence": 0.9}},
+    {"slot_name": "Slot 3", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC11-1", "RC11-2", "RC14", "RC12"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 3 1 x 16 Gen5 Full Height - Half Length or 1 x 16 Gen5 Low Profile", "confidence": 0.9}},
+    {"slot_name": "Slot 4", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC7", "RC11-1", "RC11-2", "RC14", "RC15"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 4 1 x 16 Gen5 Full Height - Half Length or 1 x 8 Gen5 Full Height - Half Length or 1 x 8 or 1 x 16 OCP 3.0", "confidence": 0.85}},
+    {"slot_name": "Slot 5", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC7", "RC14", "RC15"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 5 2 x 16 Gen5 Full Height - Half Length or 1 x 8 Gen5 Full Height - Half Length", "confidence": 0.85}},
+    {"slot_name": "Slot 7", "processor": "via riser", "height": "FH", "length": "FL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": "DLC", "riser_codes": ["RC6-2", "RC11-2", "RC7", "RC14"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 7 1 x 16 Gen5 Full Height - Half Length or 1 x 16 Gen5 Dual Width Full Length or 1 x 8 Gen5 Full Height - Half Length", "confidence": 0.9}},
+    {"slot_name": "Slot 8", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC7", "RC12"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 8 1 x 16 Gen5 Full Height - Half Length or 1 x 8 Gen5 Full Height - Half Length", "confidence": 0.85}},
+    {"slot_name": "Slot 9", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC7", "RC11-1", "RC11-2", "RC14"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots", "page": 3, "quote": "Slot 9 1 x 16 Gen5 Full Height - Half Length or 1 x 8 Gen5 Full Height - Half Length or 1 x 16 Low Profile- Half Length", "confidence": 0.85}},
+    {"slot_name": "Slot 31", "processor": "via riser", "height": "FH", "length": "FL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC1", "RC2"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots (front riser)", "page": 3, "quote": "Slot 31 1 x 16 Gen5 Full Height - Half Length or Full Length on front Riser", "confidence": 0.9}},
+    {"slot_name": "Slot 36", "processor": "via riser", "height": "FH", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": ">75W", "riser_codes": ["RC1", "RC2"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "PCIe slots (front riser)", "page": 3, "quote": "Slot 36 1 x 16 Gen5 Full Height - Half Length on front Riser", "confidence": 0.9}},
+    {"slot_name": "Slot 34", "processor": "via riser", "height": "HHHL", "length": "HL", "lane_width": "x4", "pcie_gen": "Gen5", "power_class": "≤75W", "riser_codes": ["RC1", "RC2"], "is_always_on": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "BOSS row + PCIe slots (front BOSS)", "page": 2, "quote": "Slot 34: Front BOSS slot", "confidence": 0.85}},
+    {"slot_name": "Slot 38", "processor": "via riser", "height": "HHHL", "length": "HL", "lane_width": "x16", "pcie_gen": "Gen5", "power_class": "≤75W", "riser_codes": ["RC2"], "is_always_on": false,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Figure 43. Riser RF4A — Slot 38", "page": 47, "quote": "Riser RF4A — 1. Slot 38", "confidence": 0.8}},
+    {"slot_name": "Slot 6 (Rear BOSS)", "processor": "via riser", "height": "HHHL", "length": "HL", "lane_width": "x4", "pcie_gen": "Gen5", "power_class": "≤75W", "riser_codes": ["RC0", "RC6-1", "RC6-2", "RC7", "RC11-1", "RC11-2", "RC12", "RC14", "RC15"], "is_always_on": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "BOSS row", "page": 2, "quote": "Slot 6: Rear BOSS slot", "confidence": 0.85}}
+  ],
+
+  "riser_configs": [
+    {"config_no": "RC0", "riser_configuration": "No Risers", "cpus": 2, "slot_count": 0, "use_case": "Diskless / minimal", "rear_storage_possible": false, "perc_support": "none",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "0 | No Risers | 2 | N/A | No", "confidence": 0.95}},
+    {"config_no": "RC1", "riser_configuration": "RF1a+RF3a+RF4a", "cpus": 2, "slot_count": 3, "use_case": "Front-I/O", "rear_storage_possible": false, "perc_support": "none",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "1 | RF1a+RF3a+RF4a | 2 | N/A | No", "confidence": 0.95}},
+    {"config_no": "RC2", "riser_configuration": "RF1a+RF2a+RF3a+RF4a", "cpus": 2, "slot_count": 4, "use_case": "Front-I/O + Front BOSS", "rear_storage_possible": false, "perc_support": "none",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "2 | RF1a+RF2a+RF3a+RF4a | 2 | N/A | No", "confidence": 0.95}},
+    {"config_no": "RC6-1", "riser_configuration": "R1b+R2b+R3e+R4b+R5b (HL)", "cpus": 2, "slot_count": 5, "use_case": "GPU-dense (HL)", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "6-1 | R1b+R2b+R3e+R4b+ R5b (HL) | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC6-2", "riser_configuration": "R1b+R2b+R3e+R4b+R5b (FL)", "cpus": 2, "slot_count": 5, "use_case": "GPU-dense (FL DW)", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "6-2 | R1b+R2b+R3e+R4b+ R5b (FL) | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC7", "riser_configuration": "R1a+R2b+R3a+R4b+R5a", "cpus": 2, "slot_count": 7, "use_case": "Balanced / CXL", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "7 | R1a+R2b+R3a+R4b+R5a | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC11-1", "riser_configuration": "R1b+R2a+R3c+R4a+R5b(HL)", "cpus": 2, "slot_count": 5, "use_case": "GPU-dense (HL)", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "11-1 | R1b+R2a+R3c+R4a+R5b(HL ) | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC11-2", "riser_configuration": "R1b+R2a+R3c+R4a+R5b (FL)", "cpus": 2, "slot_count": 5, "use_case": "GPU-dense (FL DW)", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "11-2 | R1b+R2a+R3c+R4a+R5b (FL) | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC12", "riser_configuration": "R1b+R2b+R3c+R4b+R5c", "cpus": 2, "slot_count": 6, "use_case": "Single-width GPU dense (6x L4)", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "12 | R1b+R2b+R3c+R4b+R5c | 2 | Front | No", "confidence": 0.95}},
+    {"config_no": "RC14", "riser_configuration": "R2a+R3a+R4a+R5a", "cpus": 2, "slot_count": 4, "use_case": "Rear-storage / NIC-dense", "rear_storage_possible": true, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "14 | R2a+R3a+R4a+R5a | 2 | Front | Yes", "confidence": 0.95}},
+    {"config_no": "RC15", "riser_configuration": "R3c+R4c", "cpus": 2, "slot_count": 2, "use_case": "Minimal", "rear_storage_possible": false, "perc_support": "front",
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 33. PCIe Riser Configurations", "page": 48, "quote": "15 | R3c+R4c | 2 | Front | No", "confidence": 0.95}}
+  ],
+
+  "lom_available": {
+    "value": "no",
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Network options", "page": 2, "quote": "OCP NIC card 3.0 : Two slots on the front or two slots on the rear", "confidence": 0.9}
+  },
+  "lom_port_count": {"value": null, "evidence": {"source": "source-silent", "anchor": "no LOM on R770; OCP-only network options"}},
+  "lom_speeds_gbe": {"value": null, "evidence": {"source": "source-silent", "anchor": "no LOM on R770; OCP-only network options"}},
+  "lom_port_types": {"value": null, "evidence": {"source": "source-silent", "anchor": "no LOM on R770; OCP-only network options"}},
+
+  "ocp_slot_count": {
+    "value": 2,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Network options", "page": 2, "quote": "OCP NIC card 3.0 : Two slots on the front or two slots on the rear", "confidence": 0.95}
+  },
+  "ocp_generation": {
+    "value": "OCP 3.0",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list", "page": 38, "quote": "OCP 3.0 feature list", "confidence": 0.99}
+  },
+  "ocp_form_factor": {
+    "value": "SFF",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — Form factor", "page": 38, "quote": "Form factor | SFF", "confidence": 0.99}
+  },
+  "ocp_pcie_gen": {
+    "value": "Gen5",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — PCIe Gen", "page": 38, "quote": "PCIe Gen | Gen5", "confidence": 0.99}
+  },
+  "ocp_lane_widths": {
+    "value": ["x8", "x16"],
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — Max PCIe width", "page": 38, "quote": "Max PCIe width | x8, x16 (For Rear I/O configuration additional OCP cable is required)", "confidence": 0.95}
+  },
+  "ocp_max_ports": {
+    "value": 4,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — Max number of ports", "page": 38, "quote": "Max number of ports | 4", "confidence": 0.99}
+  },
+  "ocp_max_port_speed_gbe": {
+    "value": 100,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — Max port speed", "page": 38, "quote": "Max port speed | 25 GbE, 100 GbE (For Rear I/O configuration additional OCP cable is required)", "confidence": 0.95}
+  },
+  "ocp_port_types": {
+    "value": ["BT", "SFP28", "QSFP56", "QSFP112"],
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards", "page": 38, "quote": "Supported OCP cards: BT (1/10 GbE), SFP28 (25 GbE), QSFP56 (25/100 GbE), QSFP112 (200 GbE)", "confidence": 0.92}
+  },
+  "ocp_power_envelope_w": {
+    "value": 35,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list — Power consumption", "page": 38, "quote": "Power consumption | 15 W–35 W", "confidence": 0.95}
+  },
+  "ocp_mgmt_features": {
+    "value": ["NC-SI", "SNAPI", "WoL", "Shared LOM"],
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 30. OCP 3.0 feature list", "page": 38, "quote": "NC-SI | Yes; SNAPI | Yes; WoL | Yes; (Shared LOM noted in Table 32)", "confidence": 0.9}
+  },
+  "ocp_supports_dpu": {
+    "value": false,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "DPU restrictions (riser-config gating)", "page": 97, "quote": "DPUs are supported on designated riser configs of RC1, RC2, RC6-2 and RC11-2.", "confidence": 0.85}
+  },
+
+  "supported_nics": [
+    {"slot_type": "OCP", "vendor": "Mellanox", "port_type": "QSFP56", "port_speed_gbe": 25, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards", "page": 38, "quote": "OCP 3.0 | Mellanox | QSFP56 | 25 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "QSFP56", "port_speed_gbe": 25, "port_count": 4, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards", "page": 38, "quote": "OCP 3.0 | Broadcom | QSFP56 | 25 GbE | 4", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Mellanox", "port_type": "QSFP56", "port_speed_gbe": 100, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards", "page": 38, "quote": "OCP 3.0 | Mellanox | QSFP56 | 100 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "QSFP56", "port_speed_gbe": 100, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards", "page": 38, "quote": "OCP 3.0 | Broadcom | QSFP56 | 100 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "BT", "port_speed_gbe": 1, "port_count": 4, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Broadcom | BT | 1 GbE | 4", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "BT", "port_speed_gbe": 10, "port_count": 4, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Broadcom | BT | 10 GbE | 4", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "BT", "port_speed_gbe": 10, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Broadcom | BT | 10 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "SFP28", "port_speed_gbe": 25, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Broadcom | SFP28 | 25 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Broadcom", "port_type": "QSFP112", "port_speed_gbe": 200, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Broadcom | QSFP112 | 200 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Intel", "port_type": "BT", "port_speed_gbe": 10, "port_count": 2, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Intel | BT | 10 GbE | 2", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Intel", "port_type": "BT", "port_speed_gbe": 10, "port_count": 4, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Intel | BT | 10 GbE | 4", "confidence": 0.95}},
+    {"slot_type": "OCP", "vendor": "Intel", "port_type": "BT", "port_speed_gbe": 1, "port_count": 4, "form_factor": "OCP 3.0 SFF", "model": null,
+      "evidence": {"source": "source/technical-guide.md", "anchor": "Table 31. Supported OCP cards (continued)", "page": 39, "quote": "Intel | BT | 1 GbE | 4", "confidence": 0.95}}
+  ],
+
+  "mgmt_controller": {
+    "value": "iDRAC10",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Table 2. Comparison — System management", "page": 9, "quote": "iDRAC10, iDRAC Direct, iDRAC RESTful API with Redfish", "confidence": 0.99}
+  },
+  "mgmt_port": {
+    "value": "1GbE BASE-T (Dedicated iDRAC Ethernet)",
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Ports — Rear Ports", "page": 3, "quote": "1 x Dedicated ethernet port for iDRAC management", "confidence": 0.92}
+  },
+
+  "psu_count_max": {
+    "value": 2,
+    "evidence": {"source": "source/technical-guide.md", "anchor": "PowerEdge R770 system configurations and features", "page": 5, "quote": "Two AC or DC power supply units", "confidence": 0.95}
+  },
+  "psu_redundancy": {
+    "value": "1+1",
+    "evidence": {"source": "source/technical-guide.md", "anchor": "PowerEdge R770 system configurations and features", "page": 5, "quote": "Two AC or DC power supply units", "confidence": 0.85}
+  },
+  "max_psu_output_w": {
+    "value": 3200,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "3200 W Titanium 200—240 VAC or 240 VDC", "confidence": 0.99}
+  },
+  "best_psu_efficiency_class": {
+    "value": "Titanium",
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1500 W Titanium ... 3200 W Titanium ... 3200 W 277 VAC and 336 HVDC Titanium", "confidence": 0.99}
+  },
+  "dc_power_supported": {
+    "value": true,
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1400 W -48VDC 60mm; 240 VDC; 336 HVDC Titanium", "confidence": 0.99}
+  },
+
+  "psu_options": [
+    {"output_w": 800, "efficiency_class": "Platinum", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "800 W Platinum 100—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 800, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "800 W Titanium 100—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 1100, "efficiency_class": "Platinum", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1100 W Platinium 100—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 1100, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1100 W Titanium 100—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 1400, "efficiency_class": "N/A", "input": "DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1400 W -48VDC 60mm", "confidence": 0.99}},
+    {"output_w": 1500, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1500 W Titanium 100—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 1500, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1500 W 277 VAC and 336 HVDC Titanium*", "confidence": 0.95}},
+    {"output_w": 1800, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "1800 W HLAC Titanium 200—240 VAC or 240 VDC*", "confidence": 0.95}},
+    {"output_w": 2400, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": false,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "2400 W Titanium 100—240 VAC or 240 VDC*", "confidence": 0.95}},
+    {"output_w": 3200, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "3200 W Titanium 200—240 VAC or 240 VDC", "confidence": 0.99}},
+    {"output_w": 3200, "efficiency_class": "Titanium", "input": "AC/DC", "available_at_launch": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Hot swap Power Supplies", "page": 2, "quote": "3200 W 277 VAC and 336 HVDC Titanium", "confidence": 0.99}}
+  ],
+
+  "security_features": {
+    "value": [
+      "signed-firmware",
+      "data-at-rest-encryption",
+      "secure-boot",
+      "secured-component-verification",
+      "silicon-root-of-trust",
+      "system-lockdown",
+      "chassis-intrusion-detection",
+      "tpm-2.0-fips",
+      "tpm-2.0-cc-tcg"
+    ],
+    "evidence": {"source": "source/spec-sheet.md", "anchor": "Security row", "page": 2,
+      "quote": "Cryptographically signed firmware; Data at Rest Encryption (SEDs with local or external key mgmt); Secure Boot; Secured Component Verification; Silicon Root of Trust; System Lockdown (requires iDRAC10 Enterprise or Datacenter); Chassis Intrusion Detection; TPM 2.0 FIPS, CC-TCG certified",
+      "confidence": 0.95}
+  },
+
+  "supported_os": {
+    "value": [
+      "Canonical Ubuntu Server LTS",
+      "Microsoft Windows Server",
+      "Red Hat Enterprise Linux",
+      "SUSE Linux Enterprise Server",
+      "VMware ESXi",
+      "Dell NativeEdge OS"
+    ],
+    "evidence": {"source": "source/technical-guide.md", "anchor": "Supported operating system", "page": 67,
+      "quote": "Canonical Ubuntu Server LTS; Microsoft Windows Server with Hyper-V; Red Hat Enterprise Linux; SUSE Linux Enterprise Server; VMware ESXi; Dell NativeEdge OS",
+      "confidence": 0.97}
+  },
+
+  "vendor_extensions": {
+    "dell": {
+      "smart_power_and_cooling": true,
+      "idrac_features": ["iDRAC10", "iDRAC Direct", "iDRAC RESTful API with Redfish", "RACADM CLI", "iSM", "Quick Sync 2"],
+      "dc_mhs_compliant": true,
+      "data_center_secured_control_module": true,
+      "evidence": {"source": "source/spec-sheet.md", "anchor": "Embedded Management row", "page": 2,
+        "quote": "iDRAC; iDRAC Direct; iDRAC RESTful API with Redfish; RACADM CLI; iDRAC Service Module (iSM); Quick Sync 2 wireless module",
+        "confidence": 0.92}
+    }
+  },
+
+  "sources": [
+    {
+      "type": "tech-guide",
+      "title": "Dell PowerEdge R770 Technical Guide",
+      "url": "https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/poweredge-r770-technical-guide.pdf",
+      "local": "source/technical-guide.pdf",
+      "local_extraction": "source/technical-guide.md",
+      "revision": "A07",
+      "date": "December 2025",
+      "pages": 110,
+      "audit_status": "byte-identical",
+      "audit_date": "2026-05-07"
+    },
+    {
+      "type": "spec-sheet",
+      "title": "PowerEdge R770 Specification Sheet",
+      "url": "https://www.delltechnologies.com/asset/en-us/products/servers/technical-support/poweredge-r770-spec-sheet.pdf",
+      "local": "source/spec-sheet.pdf",
+      "local_extraction": "source/spec-sheet.md",
+      "date": "December 2025",
+      "pages": 3,
+      "audit_status": "byte-identical",
+      "audit_date": "2026-05-07"
+    },
+    {
+      "type": "brochure",
+      "title": "Dell PowerEdge Servers — Flexible, purpose-built solutions designed to provide performance across AI, Edge, Scale and Core applications/workloads (Brochure)",
+      "url": "https://www.delltechnologies.com/asset/en-us/products/servers/briefs-summaries/poweredge-servers-brochure.pdf",
+      "local": "../source/poweredge-servers-brochure.pdf",
+      "local_extraction": "../source/poweredge-servers-brochure.md",
+      "pages": 6,
+      "audit_status": "unchecked",
+      "audit_date": "2026-05-07"
+    }
+  ]
+}

@@ -81,15 +81,13 @@ export type StorageSummary = {
 
 export type ExtractionSummary = ServerSummary | StorageSummary;
 
-const REPO_ROOT = path.resolve(process.cwd(), "..");
+import { REPO_ROOT, KNOWN_CATEGORIES } from "./repo-walk";
 
 function unwrap<T = any>(field: any): T | null {
   if (field == null) return null;
   if (typeof field === "object" && "value" in field) return field.value as T;
   return field as T;
 }
-
-import { KNOWN_CATEGORIES } from "./repo-walk";
 
 function walk(dir: string, out: string[], depth = 0) {
   if (depth > 8) return;

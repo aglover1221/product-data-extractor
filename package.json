@@ -12,7 +12,9 @@
     "studio:init": "tsx scripts/init-studio-db.ts",
     "studio:seed": "tsx scripts/seed-from-filesystem.ts",
     "extract-one": "tsx scripts/extract-one.ts",
-    "audit": "tsx scripts/audit-cli.ts"
+    "audit": "tsx scripts/audit-cli.ts",
+    "test": "vitest run",
+    "test:watch": "vitest"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.40.0",
@@ -51,6 +53,7 @@
     "postcss": "^8.4.49",
     "tailwindcss": "^3.4.15",
     "tsx": "^4.19.2",
-    "typescript": "^5.6.3"
+    "typescript": "^5.6.3",
+    "vitest": "^4.1.6"
   }
 }

@@ -177,21 +177,20 @@ export type MigrateResult = {
  * Apply all pending migrations.
  *
  * - Verifies checksums of already-applied migrations and throws on drift.
- * - If `schema_migrations` was just created AND the first pending migration
- *   already has its tables present in the DB, adopts it without re-executing
- *   (existing-database upgrade path).
+ * - If no migrations have ever been applied AND the first pending migration's
+ *   tables are already present, adopts it without re-executing (existing-
+ *   database upgrade path). Gated on "no applied rows" rather than "table
+ *   didn't exist" so that running `migrate:status` first — which lazily
+ *   creates the table — doesn't disable adoption.
  * - Each migration runs in its own transaction so a partial failure doesn't
  *   leave the DB half-migrated relative to `schema_migrations`.
  */
 export function runMigrations(db: Database.Database): MigrateResult {
-  // Detect "fresh schema_migrations" before we create it, so we can decide
-  // whether to adopt 0001.
   const beforeTables = existingTableSet(db);
-  const hadMigrationsTable = beforeTables.has("schema_migrations");
 
   ensureMigrationsTable(db);
 
-  const { pending, drifted, missing } = getStatus(db);
+  const { applied, pending, drifted, missing } = getStatus(db);
 
   if (drifted.length > 0) {
     const lines = drifted.map(
@@ -220,7 +219,7 @@ export function runMigrations(db: Database.Database): MigrateResult {
 
   for (const file of pending) {
     const shouldAdopt =
-      !hadMigrationsTable &&
+      applied.length === 0 &&
       appliedNow.length === 0 &&
       adopted.length === 0 &&
       file.id === pending[0].id &&

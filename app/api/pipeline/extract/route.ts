@@ -198,7 +198,9 @@ export async function POST(req: NextRequest) {
   }
 
   const payload: AnthropicBatchPayload = { runId, batchId };
-  enqueueJob("anthropic-batch-poll", payload);
+  enqueueJob("anthropic-batch-poll", payload, {
+    idempotencyKey: `anthropic-batch-poll:${batchId}`,
+  });
 
   return NextResponse.json({
     runId,

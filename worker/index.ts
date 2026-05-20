@@ -65,7 +65,9 @@ async function loop() {
       await sleep(POLL_INTERVAL_MS);
       continue;
     }
-    console.log(`[worker] claimed job=${job.id} type=${job.type} attempt=${job.attempts}`);
+    console.log(
+      `[worker] claimed job=${job.id} type=${job.type} attempt=${job.attempts}/${job.max_attempts}`
+    );
     try {
       await dispatch(job);
       // For non-rescheduling handlers, mark complete. Reschedulers leave the
@@ -80,8 +82,16 @@ async function loop() {
       }
     } catch (err) {
       const msg = (err as Error).message;
-      console.error(`[worker] job=${job.id} failed: ${msg}`);
-      failJob(job.id, msg);
+      const next = failJob(job.id, msg);
+      if (next === "dead") {
+        console.error(
+          `[worker] job=${job.id} dead after ${job.attempts} attempts: ${msg}`
+        );
+      } else {
+        console.warn(
+          `[worker] job=${job.id} failed (attempt ${job.attempts}/${job.max_attempts}); will retry: ${msg}`
+        );
+      }
     }
   }
   console.log("[worker] stopped");

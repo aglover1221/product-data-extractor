@@ -1,9 +1,12 @@
 /**
- * Initializes the studio orchestrator DB by applying lib/db/schema.sql.
+ * Initializes the studio orchestrator DB by running all pending migrations.
  *
  *   npm run studio:init
  *
  * Idempotent — safe to re-run. Existing tables + data are preserved.
+ * Equivalent to `npm run migrate` plus a summary of resulting tables; kept
+ * as a separate entry point because it's what the README's "getting started"
+ * instructions point at.
  */
 import { ensureStudioSchema, getStudioDb } from "@/lib/db/client";
 

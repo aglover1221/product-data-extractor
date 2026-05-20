@@ -2,8 +2,10 @@ import Database from "better-sqlite3";
 import fs from "node:fs";
 import path from "node:path";
 import { env } from "@/lib/env";
+import { runMigrations } from "@/lib/db/migrations";
 
 let _studioDb: Database.Database | null = null;
+let _migrated = false;
 
 export function getStudioDb(): Database.Database {
   if (_studioDb) return _studioDb;
@@ -16,16 +18,17 @@ export function getStudioDb(): Database.Database {
 }
 
 /**
- * Ensures the studio schema is loaded into the configured DB.
- * Safe to call repeatedly — uses CREATE TABLE IF NOT EXISTS throughout.
+ * Ensures the studio schema is up to date by running any pending migrations
+ * from `lib/db/migrations/`. Safe to call repeatedly — applied migrations
+ * are tracked in `schema_migrations` and a once-per-process cache short-
+ * circuits subsequent calls within the same Node worker.
  *
- * Next.js bundles each server route into `.next/server/app/<route>/` so
- * `__dirname` doesn't point at lib/db/. We resolve from cwd (the project
- * root in both `next dev` and `next start`).
+ * Existing databases that pre-date the migration system are adopted on first
+ * run: if the tables from `0001_init.sql` already exist, the runner records
+ * 0001 as applied without re-executing it.
  */
 export function ensureStudioSchema(): void {
-  const db = getStudioDb();
-  const sqlPath = path.resolve(process.cwd(), "lib/db/schema.sql");
-  const ddl = fs.readFileSync(sqlPath, "utf8");
-  db.exec(ddl);
+  if (_migrated) return;
+  runMigrations(getStudioDb());
+  _migrated = true;
 }

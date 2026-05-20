@@ -22,9 +22,25 @@ cp .env.example .env
 # The viewer works without either — it just reads the sample dataset.
 
 npm install
-npm run studio:init   # creates data/studio.db
+npm run studio:init   # creates data/studio.db and applies all migrations
 npm run dev           # viewer on http://localhost:3210
 ```
+
+The orchestrator DB is versioned with numbered migrations under
+[`lib/db/migrations/`](lib/db/migrations/). `studio:init` is a thin wrapper
+over the migration runner — running against an existing DB only applies what
+hasn't been applied yet.
+
+```bash
+npm run migrate          # apply all pending migrations
+npm run migrate:status   # show applied / pending / drift (exits 1 if not clean)
+```
+
+To add a schema change, drop a new `lib/db/migrations/NNNN_short_name.sql`
+file (incremented id, two- or three-digit-padded fine, four-digit preferred).
+The runner picks it up on the next `migrate` / `studio:init` / app boot. See
+[`lib/db/migrations.ts`](lib/db/migrations.ts) for the contract — applied
+migrations are immutable; edits trigger a drift error.
 
 Visit <http://localhost:3210>. With the bundled sample dataset you'll see one
 server (Dell PowerEdge R770) under the `server` category.
@@ -96,7 +112,7 @@ lib/
   pipeline/           # discover, parse, extract, audit, spotfix orchestration
   integrations/       # anthropic, reducto, search clients
   prompts/            # formalized prompts per pipeline stage
-  db/                 # studio orchestrator SQLite client + schema
+  db/                 # studio orchestrator SQLite client + versioned migrations
   jobs/               # background job queue
 worker/               # Anthropic Batch poll handler + Reducto handler
 scripts/              # CLI entry points (audit, extract-one, init, seed)

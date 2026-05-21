@@ -446,9 +446,8 @@ export async function approveCandidate(
     };
   }
 
-  // Write to {product_dir}/source/{stable_filename}
   const filename = stableFilenameFor(cand.doc_type);
-  const sourceDir = path.join(ctx.product_dir, "source");
+  const sourceDir = sourceDirForScope(ctx, cand.scope);
   fs.mkdirSync(sourceDir, { recursive: true });
   const targetAbs = path.join(sourceDir, filename);
   const tmp = `${targetAbs}.tmp-${process.pid}-${Date.now()}`;
@@ -579,7 +578,18 @@ function sourcesYamlPathForScope(
   return path.join(ctx.product_dir, "sources.yaml");
 }
 
-function relForMd(scope: string, filename: string): string {
+export function sourceDirForScope(ctx: ProductContext, scope: string): string {
+  const dataDir = path.resolve(env.PRODUCT_MCP_DATA_DIR);
+  if (scope === "category") {
+    return path.join(dataDir, ctx.category, ctx.vendor, "source");
+  }
+  if (scope === "line") {
+    return path.join(dataDir, ctx.category, ctx.vendor, ctx.product_line, "source");
+  }
+  return path.join(ctx.product_dir, "source");
+}
+
+export function relForMd(scope: string, filename: string): string {
   if (scope === "category") return `../../source/${filename}`;
   if (scope === "line") return `../source/${filename}`;
   return `source/${filename}`;
@@ -729,7 +739,7 @@ export async function manualUpload(
 
   const scope = input.scope ?? "own";
   const filename = input.filename ?? stableFilenameFor(input.docType);
-  const sourceDir = path.join(ctx.product_dir, "source");
+  const sourceDir = sourceDirForScope(ctx, scope);
   fs.mkdirSync(sourceDir, { recursive: true });
   const targetAbs = path.join(sourceDir, filename);
   const tmp = `${targetAbs}.tmp-${process.pid}-${Date.now()}`;

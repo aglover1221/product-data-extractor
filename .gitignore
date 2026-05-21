@@ -12,3 +12,4 @@ data/*.db-wal
 tsconfig.tsbuildinfo
 dist
 build
+.draft/

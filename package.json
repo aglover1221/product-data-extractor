@@ -12,6 +12,8 @@
     "worker": "tsx worker/index.ts",
     "studio:init": "tsx scripts/init-studio-db.ts",
     "studio:seed": "tsx scripts/seed-from-filesystem.ts",
+    "migrate": "tsx scripts/migrate.ts",
+    "migrate:status": "tsx scripts/migrate-status.ts",
     "extract-one": "tsx scripts/extract-one.ts",
     "audit": "tsx scripts/audit-cli.ts",
     "test": "vitest run",

@@ -73,7 +73,7 @@ function Section({ title, rows }: { title: string; rows: SchemaRow[] }) {
             <tr>
               <th>Name</th>
               <th>Current version</th>
-              <th className="text-right">Versions</th>
+              <th className="!text-left">Versions</th>
               <th>Last edited</th>
               <th>Status</th>
               <th>Path</th>
@@ -91,7 +91,7 @@ function Section({ title, rows }: { title: string; rows: SchemaRow[] }) {
                   </Link>
                 </td>
                 <td className="font-mono text-[12px]">{r.current_version}</td>
-                <td className="text-right text-white/60">{r.version_count}</td>
+                <td className="!text-left text-white/60">{r.version_count}</td>
                 <td className="text-[11px] text-white/60">
                   {r.last_edited_at
                     ? new Date(r.last_edited_at).toISOString().slice(0, 16).replace("T", " ")

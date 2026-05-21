@@ -140,9 +140,9 @@ export default function AuditOverviewPage() {
                   <tr>
                     <th>Check</th>
                     <th>Description</th>
-                    <th className="text-right">Pass</th>
-                    <th className="text-right">Warn</th>
-                    <th className="text-right">Fail</th>
+                    <th className="!text-right">Pass</th>
+                    <th className="!text-right">Warn</th>
+                    <th className="!text-right">Fail</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -152,9 +152,9 @@ export default function AuditOverviewPage() {
                       <td className="text-white/70 text-[12px]">
                         {sa.description}
                       </td>
-                      <td className="text-right text-emerald-300">{sa.pass}</td>
-                      <td className="text-right text-amber-300">{sa.warn}</td>
-                      <td className="text-right text-red-300">{sa.fail}</td>
+                      <td className="!text-right text-emerald-300">{sa.pass}</td>
+                      <td className="!text-right text-amber-300">{sa.warn}</td>
+                      <td className="!text-right text-red-300">{sa.fail}</td>
                     </tr>
                   ))}
                 </tbody>

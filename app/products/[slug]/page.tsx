@@ -173,12 +173,12 @@ function CpuSkusTable({
           <tr>
             <th>Model</th>
             <th>Family</th>
-            <th className="text-right">Clock</th>
-            <th className="text-right">Cache</th>
-            <th className="text-right">Cores</th>
-            <th className="text-right">Threads</th>
-            <th className="text-right">Mem MT/s</th>
-            <th className="text-right">TDP</th>
+            <th className="!text-right">Clock</th>
+            <th className="!text-right">Cache</th>
+            <th className="!text-right">Cores</th>
+            <th className="!text-right">Threads</th>
+            <th className="!text-right">Mem MT/s</th>
+            <th className="!text-right">TDP</th>
             <th>DLC</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
           </tr>
@@ -188,12 +188,12 @@ function CpuSkusTable({
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="font-medium">{r.model}</td>
               <td className="text-white/70">{r.family}</td>
-              <td className="text-right">{r.clock_ghz ? `${r.clock_ghz} GHz` : "—"}</td>
-              <td className="text-right">{r.cache_mb ? `${r.cache_mb} MB` : "—"}</td>
-              <td className="text-right">{r.cores ?? "—"}</td>
-              <td className="text-right">{r.threads ?? "—"}</td>
-              <td className="text-right">{r.memory_speed_mt_s ?? "—"}</td>
-              <td className="text-right">{r.tdp_w ? `${r.tdp_w} W` : "—"}</td>
+              <td className="!text-right">{r.clock_ghz ? `${r.clock_ghz} GHz` : "—"}</td>
+              <td className="!text-right">{r.cache_mb ? `${r.cache_mb} MB` : "—"}</td>
+              <td className="!text-right">{r.cores ?? "—"}</td>
+              <td className="!text-right">{r.threads ?? "—"}</td>
+              <td className="!text-right">{r.memory_speed_mt_s ?? "—"}</td>
+              <td className="!text-right">{r.tdp_w ? `${r.tdp_w} W` : "—"}</td>
               <td>
                 <span className={r.requires_dlc ? "pill pill-on" : "pill pill-off"}>
                   {r.requires_dlc ? "req" : "no"}
@@ -228,9 +228,9 @@ function DimmsTable({
           <tr>
             <th>Type</th>
             <th>Family</th>
-            <th className="text-right">1DPC</th>
-            <th className="text-right">2DPC</th>
-            <th className="text-right">Capacity</th>
+            <th className="!text-right">1DPC</th>
+            <th className="!text-right">2DPC</th>
+            <th className="!text-right">Capacity</th>
             <th>Ranks</th>
             <th>Width</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
@@ -241,9 +241,9 @@ function DimmsTable({
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="font-medium">{r.dimm_type}</td>
               <td className="text-white/70">{r.family}</td>
-              <td className="text-right">{r.speed_mt_s_1dpc ? `${r.speed_mt_s_1dpc} MT/s` : "—"}</td>
-              <td className="text-right">{r.speed_mt_s_2dpc ? `${r.speed_mt_s_2dpc} MT/s` : "—"}</td>
-              <td className="text-right">{r.capacity_gb ? `${r.capacity_gb} GB` : "—"}</td>
+              <td className="!text-right">{r.speed_mt_s_1dpc ? `${r.speed_mt_s_1dpc} MT/s` : "—"}</td>
+              <td className="!text-right">{r.speed_mt_s_2dpc ? `${r.speed_mt_s_2dpc} MT/s` : "—"}</td>
+              <td className="!text-right">{r.capacity_gb ? `${r.capacity_gb} GB` : "—"}</td>
               <td>{r.ranks ?? "—"}</td>
               <td>{r.width ?? "—"}</td>
               <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
@@ -273,12 +273,12 @@ function DriveConfigsTable({
         <thead>
           <tr>
             <th>Description</th>
-            <th className="text-right">Count</th>
+            <th className="!text-right">Count</th>
             <th>Form factor</th>
             <th>Protocols</th>
             <th>Rear</th>
             <th>Front-IO</th>
-            <th className="text-right">Max raw</th>
+            <th className="!text-right">Max raw</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
           </tr>
         </thead>
@@ -286,7 +286,7 @@ function DriveConfigsTable({
           {rows.map((r, i) => (
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="max-w-[300px]">{r.description}</td>
-              <td className="text-right">{r.drive_count ?? "—"}</td>
+              <td className="!text-right">{r.drive_count ?? "—"}</td>
               <td>{r.drive_form_factor ?? "—"}</td>
               <td>
                 {Array.isArray(r.drive_protocols)
@@ -299,7 +299,7 @@ function DriveConfigsTable({
               </td>
               <td>{r.is_rear ? "yes" : "—"}</td>
               <td>{r.is_front_io ? "yes" : "—"}</td>
-              <td className="text-right">
+              <td className="!text-right">
                 {r.max_raw_capacity_tb ? `${r.max_raw_capacity_tb.toFixed(0)} TB` : "—"}
               </td>
               <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
@@ -454,8 +454,8 @@ function GpuFormFactorTable({
       <thead>
         <tr>
           <th>Form factor</th>
-          <th className="text-right">Max count</th>
-          <th className="text-right">Max W per GPU</th>
+          <th className="!text-right">Max count</th>
+          <th className="!text-right">Max W per GPU</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
       </thead>
@@ -463,8 +463,8 @@ function GpuFormFactorTable({
         {rows.map((r, i) => (
           <tr key={i} title={evidenceTitle(r.evidence)}>
             <td className="font-medium">{r.form_factor}</td>
-            <td className="text-right">{r.max_count ?? "—"}</td>
-            <td className="text-right">{r.max_power_w_per_gpu ? `${r.max_power_w_per_gpu} W` : "—"}</td>
+            <td className="!text-right">{r.max_count ?? "—"}</td>
+            <td className="!text-right">{r.max_power_w_per_gpu ? `${r.max_power_w_per_gpu} W` : "—"}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
         ))}
@@ -492,8 +492,8 @@ function SupportedGpusTable({
           <th>GPU</th>
           <th>Vendor</th>
           <th>Form factor</th>
-          <th className="text-right">Power</th>
-          <th className="text-right">Max qty</th>
+          <th className="!text-right">Power</th>
+          <th className="!text-right">Max qty</th>
           <th>PCIe</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
@@ -504,8 +504,8 @@ function SupportedGpusTable({
             <td className="font-medium">{r.gpu}</td>
             <td className="text-white/70">{r.vendor}</td>
             <td>{r.form_factor}</td>
-            <td className="text-right">{r.power_w ? `${r.power_w} W` : "—"}</td>
-            <td className="text-right">{r.max_qty ?? "—"}</td>
+            <td className="!text-right">{r.power_w ? `${r.power_w} W` : "—"}</td>
+            <td className="!text-right">{r.max_qty ?? "—"}</td>
             <td>{r.pcie ?? "—"}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
@@ -600,8 +600,8 @@ function RiserConfigsTable({
           <tr>
             <th>Config</th>
             <th>Description</th>
-            <th className="text-right">CPUs</th>
-            <th className="text-right">Slots</th>
+            <th className="!text-right">CPUs</th>
+            <th className="!text-right">Slots</th>
             <th>Use case</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
           </tr>
@@ -611,8 +611,8 @@ function RiserConfigsTable({
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="font-medium">{r.config_no}</td>
               <td className="max-w-[420px]">{r.riser_configuration}</td>
-              <td className="text-right">{r.cpus ?? "—"}</td>
-              <td className="text-right">{r.slot_count ?? "—"}</td>
+              <td className="!text-right">{r.cpus ?? "—"}</td>
+              <td className="!text-right">{r.slot_count ?? "—"}</td>
               <td className="text-white/70">{r.use_case ?? "—"}</td>
               <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
             </tr>
@@ -642,7 +642,7 @@ function DpusTable({
           <th>Model</th>
           <th>Vendor</th>
           <th>Port speed</th>
-          <th className="text-right">Ports</th>
+          <th className="!text-right">Ports</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
       </thead>
@@ -652,7 +652,7 @@ function DpusTable({
             <td className="font-medium">{r.model}</td>
             <td className="text-white/70">{r.vendor}</td>
             <td>{r.port_speed ?? "—"}</td>
-            <td className="text-right">{r.port_count ?? "—"}</td>
+            <td className="!text-right">{r.port_count ?? "—"}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
         ))}
@@ -682,11 +682,11 @@ function CxlConfigsTable({
             <th>Riser</th>
             <th>Slots</th>
             <th>Native DIMMs</th>
-            <th className="text-right">Native cap</th>
-            <th className="text-right">AICs</th>
+            <th className="!text-right">Native cap</th>
+            <th className="!text-right">AICs</th>
             <th>Per-AIC</th>
-            <th className="text-right">CXL cap</th>
-            <th className="text-right">Total system</th>
+            <th className="!text-right">CXL cap</th>
+            <th className="!text-right">Total system</th>
             <th>At launch</th>
             <th>Notes</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
@@ -713,19 +713,19 @@ function CxlConfigsTable({
                 )}
               </td>
               <td className="text-white/70">{r.native_dimm_config}</td>
-              <td className="text-right">
+              <td className="!text-right">
                 {r.native_dimm_capacity_gb ? `${r.native_dimm_capacity_gb} GB` : "—"}
               </td>
-              <td className="text-right">{r.cxl_aic_count ?? "—"}</td>
+              <td className="!text-right">{r.cxl_aic_count ?? "—"}</td>
               <td className="text-white/70">
                 {r.cxl_dimm_count_per_aic && r.cxl_dimm_capacity_gb
                   ? `${r.cxl_dimm_count_per_aic} × ${r.cxl_dimm_capacity_gb} GB`
                   : "—"}
               </td>
-              <td className="text-right">
+              <td className="!text-right">
                 {r.cxl_total_capacity_gb ? `${r.cxl_total_capacity_gb} GB` : "—"}
               </td>
-              <td className="text-right font-medium">
+              <td className="!text-right font-medium">
                 {r.total_system_memory_gb
                   ? `${r.total_system_memory_gb} GB (${(r.total_system_memory_gb / 1024).toFixed(1)} TB)`
                   : "—"}
@@ -761,7 +761,7 @@ function PsuOptionsTable({
     <table className="data-table">
       <thead>
         <tr>
-          <th className="text-right">Output</th>
+          <th className="!text-left">Output</th>
           <th>Class</th>
           <th>Input</th>
           <th>At launch</th>
@@ -772,7 +772,7 @@ function PsuOptionsTable({
       <tbody>
         {rows.map((r, i) => (
           <tr key={i} title={evidenceTitle(r.evidence)}>
-            <td className="text-right font-medium">{r.output_w ? `${r.output_w} W` : "—"}</td>
+            <td className="!text-left font-medium">{r.output_w ? `${r.output_w} W` : "—"}</td>
             <td>{r.efficiency_class ?? "—"}</td>
             <td>{r.input ?? "—"}</td>
             <td>{r.available_at_launch ? "yes" : "—"}</td>

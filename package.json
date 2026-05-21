@@ -5,6 +5,7 @@
   "license": "MIT",
   "scripts": {
     "dev": "next dev -p 3210",
+    "dev:wsl": "next dev -p 3210 -H 0.0.0.0",
     "dev:all": "concurrently -n web,worker -c blue,green \"npm run dev\" \"npm run worker\"",
     "build": "next build",
     "start": "next start -p 3210",

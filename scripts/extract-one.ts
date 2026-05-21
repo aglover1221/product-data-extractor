@@ -163,7 +163,9 @@ async function main() {
   ).run(runId, ctx.slug, submittedAt);
 
   const payload: AnthropicBatchPayload = { runId, batchId };
-  const jobId = enqueueJob("anthropic-batch-poll", payload);
+  const jobId = enqueueJob("anthropic-batch-poll", payload, {
+    idempotencyKey: `anthropic-batch-poll:${batchId}`,
+  });
   console.log(`[extract-one] batch submitted:`);
   console.log(`  batch_id:  ${batchId}`);
   console.log(`  run_id:    ${runId}`);

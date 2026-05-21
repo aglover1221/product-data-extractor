@@ -119,7 +119,10 @@ export async function submitParseForSource(
   enqueueJob<{ parseRunId: number; reductoJobId: string }>(
     "reducto-poll",
     { parseRunId, reductoJobId: jobId },
-    new Date(Date.now() + POLL_DELAY_SECONDS * 1000)
+    {
+      runAt: new Date(Date.now() + POLL_DELAY_SECONDS * 1000),
+      idempotencyKey: `reducto-poll:${jobId}`,
+    }
   );
 
   return { parseRunId, sourcePath, reductoJobId: jobId };

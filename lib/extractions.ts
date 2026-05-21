@@ -82,6 +82,7 @@ export type StorageSummary = {
 export type ExtractionSummary = ServerSummary | StorageSummary;
 
 import { REPO_ROOT, KNOWN_CATEGORIES } from "./repo-walk";
+import { isPathInsideRoot } from "./path-security";
 
 function unwrap<T = any>(field: any): T | null {
   if (field == null) return null;
@@ -291,7 +292,7 @@ export function resolveProductSourcePath(slug: string, manifestPath: string): st
   }
 
   for (const fp of candidates) {
-    if (!fp.startsWith(REPO_ROOT)) continue;
+    if (!isPathInsideRoot(REPO_ROOT, fp)) continue;
     if (fs.existsSync(fp) && fs.statSync(fp).isFile()) return fp;
   }
   return null;

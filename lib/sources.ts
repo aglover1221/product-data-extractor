@@ -3,6 +3,7 @@ import path from "node:path";
 import yaml from "js-yaml";
 import { REPO_ROOT, walkDirs, parseProductRelDir } from "./repo-walk";
 import { parseMarkdown } from "./safe-matter";
+import { isPathInsideRoot } from "./path-security";
 
 export type SourceScope = "product" | "line" | "category";
 
@@ -35,7 +36,7 @@ export function classifyScope(localPath: string): SourceScope {
 export function resolveManifestPath(mdDir: string, localPath: string): string | null {
   if (!localPath) return null;
   const abs = path.resolve(mdDir, localPath);
-  if (!abs.startsWith(REPO_ROOT)) return null;
+  if (!isPathInsideRoot(REPO_ROOT, abs)) return null;
   return fs.existsSync(abs) ? abs : null;
 }
 

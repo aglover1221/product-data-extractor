@@ -12,7 +12,8 @@ const ITEMS: { href: string; label: string }[] = [
   { href: "/pipeline/schema", label: "Schemas" },
   { href: "/pipeline/extract", label: "Extract" },
   { href: "/pipeline/runs", label: "Runs" },
-  { href: "/pipeline/audit", label: "Audit" }
+  { href: "/pipeline/audit", label: "Audit" },
+  { href: "/usage", label: "Usage" }
 ];
 
 function isActive(pathname: string, href: string): boolean {

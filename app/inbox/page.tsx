@@ -26,36 +26,35 @@ function ageString(iso: string): string {
 
 function FilterBar({ type, status }: { type: FilterType; status: FilterStatus }) {
   const types: FilterType[] = ["all", "flag", "note"];
-  const statuses: FilterStatus[] = ["open", "resolved", "wont-fix", "all"];
+  const statuses: FilterStatus[] = ["all", "open", "resolved", "wont-fix"];
   const link = (t: FilterType, s: FilterStatus) =>
     `/inbox?type=${t}&status=${s}`;
 
+  const groupCls =
+    "inline-flex items-center rounded-md border border-white/10 bg-white/[0.03] gap-2";
+  const titleCls =
+    "px-2 py-2 rounded text-[gray] text-[10px] font-bold uppercase tracking-wider select-none border-r rounded-none border-white/5 bg-white/[0.1]";
+  const btnCls = (active: boolean, isLast: boolean) =>
+    `px-2 py-1 rounded text-[12px] leading-none ${
+      active
+        ? "bg-white/20 text-white"
+        : "text-white/60 hover:bg-white/[0.06]"
+    } ${isLast ? "mr-2" : ""}`;
+
   return (
-    <div className="flex flex-wrap gap-3 text-[12px]">
-      <div className="flex items-center gap-1">
-        <span className="text-white/50 mr-1">type</span>
-        {types.map((t) => (
-          <Link
-            key={t}
-            href={link(t, status)}
-            className={`px-2 py-0.5 rounded ${
-              t === type ? "bg-white/10 text-white" : "text-white/60 hover:bg-white/5"
-            }`}
-          >
+    <div className="flex flex-wrap items-center gap-5">
+      <div className={groupCls}>
+        <span className={titleCls}>type</span>
+        {types.map((t, idx) => (
+          <Link key={t} href={link(t, status)} className={btnCls(t === type, idx === types.length - 1)}>
             {t}
           </Link>
         ))}
       </div>
-      <div className="flex items-center gap-1">
-        <span className="text-white/50 mr-1">status</span>
-        {statuses.map((s) => (
-          <Link
-            key={s}
-            href={link(type, s)}
-            className={`px-2 py-0.5 rounded ${
-              s === status ? "bg-white/10 text-white" : "text-white/60 hover:bg-white/5"
-            }`}
-          >
+      <div className={groupCls}>
+        <span className={titleCls}>status</span>
+        {statuses.map((s, idx) => (
+          <Link key={s} href={link(type, s)} className={btnCls(s === status, idx === statuses.length - 1)}>
             {s}
           </Link>
         ))}
@@ -70,7 +69,7 @@ export default function InboxPage({
   searchParams: { type?: string; status?: string };
 }) {
   const type = ((searchParams.type as FilterType) ?? "all") as FilterType;
-  const status = ((searchParams.status as FilterStatus) ?? "open") as FilterStatus;
+  const status = ((searchParams.status as FilterStatus) ?? "all") as FilterStatus;
   const all = listAnnotationsAcrossProducts({ type, status });
 
   return (

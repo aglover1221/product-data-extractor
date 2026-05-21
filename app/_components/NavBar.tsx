@@ -13,6 +13,7 @@ const ITEMS: { href: string; label: string }[] = [
   { href: "/pipeline/extract", label: "Extract" },
   { href: "/pipeline/runs", label: "Runs" },
   { href: "/pipeline/audit", label: "Audit" },
+  { href: "/compare", label: "Compare" },
   { href: "/usage", label: "Usage" }
 ];
 

@@ -25,6 +25,7 @@ import path from "node:path";
 import crypto from "node:crypto";
 import { env } from "@/lib/env";
 import { parseMarkdown } from "@/lib/safe-matter";
+import { isPathInsideRoot } from "@/lib/path-security";
 
 const DATA_DIR = path.resolve(env.PRODUCT_MCP_DATA_DIR);
 
@@ -419,7 +420,7 @@ export function auditCrossLinks(walk: PortfolioWalk): SubAuditReport {
     if (!target || typeof target !== "string") return null;
     const fromDir = path.dirname(fromMd);
     const abs = path.resolve(fromDir, target);
-    if (!abs.startsWith(DATA_DIR)) return null;
+    if (!isPathInsideRoot(DATA_DIR, abs)) return null;
     if (!fs.existsSync(abs)) return null;
     return abs;
   }
@@ -626,7 +627,7 @@ export function auditOrphans(walk: PortfolioWalk): SubAuditReport {
         const v = row?.[k];
         if (typeof v !== "string" || !v) continue;
         const abs = path.resolve(fromDir, v);
-        if (abs.startsWith(DATA_DIR)) referencedAbs.add(abs);
+        if (isPathInsideRoot(DATA_DIR, abs)) referencedAbs.add(abs);
       }
     }
   }
@@ -718,7 +719,7 @@ export function auditManifests(walk: PortfolioWalk): SubAuditReport {
         }
         if (typeof v !== "string") continue;
         const abs = path.resolve(fromDir, v);
-        if (!abs.startsWith(DATA_DIR) || !fs.existsSync(abs)) {
+        if (!isPathInsideRoot(DATA_DIR, abs) || !fs.existsSync(abs)) {
           results.push({
             status: "fail",
             subject,

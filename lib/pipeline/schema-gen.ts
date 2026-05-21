@@ -21,6 +21,7 @@ import {
   messagesCreate,
 } from "@/lib/integrations/anthropic";
 import { getStudioDb, ensureStudioSchema } from "@/lib/db/client";
+import { isPathInsideRoot } from "@/lib/path-security";
 
 const DATA_DIR = env.PRODUCT_MCP_DATA_DIR;
 const SCHEMAS_DIR = path.join(DATA_DIR, "schemas");
@@ -41,7 +42,7 @@ function resolveReferencePath(p: string): { abs: string; rel: string } {
   // Accept absolute paths inside DATA_DIR or already-relative paths.
   let abs = path.isAbsolute(p) ? p : path.resolve(DATA_DIR, p);
   abs = path.resolve(abs);
-  if (!abs.startsWith(path.resolve(DATA_DIR))) {
+  if (!isPathInsideRoot(DATA_DIR, abs)) {
     throw new Error(`Reference path escapes PRODUCT_MCP_DATA_DIR: ${p}`);
   }
   const rel = path.relative(DATA_DIR, abs);

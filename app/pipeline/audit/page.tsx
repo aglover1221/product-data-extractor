@@ -77,7 +77,7 @@ export default function AuditOverviewPage() {
       {report && (
         <>
           <section className="panel">
-            <div className="panel-title">Summary</div>
+            <div className="panel-title font-bold">Summary</div>
             <dl className="kv">
               <dt>Generated at</dt>
               <dd>{new Date(report.generatedAt).toLocaleString()}</dd>

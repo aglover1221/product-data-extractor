@@ -40,7 +40,7 @@ export default function NewDiscoveryForm() {
 
   return (
     <form onSubmit={handleSubmit} className="panel space-y-3">
-      <div className="text-sm uppercase tracking-wide text-white/50">New discovery</div>
+      <div className="text-sm uppercase tracking-wide text-white/50 font-bold">New discovery</div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
         <label className="text-xs text-white/70 space-y-1">
           <div>Vendor</div>

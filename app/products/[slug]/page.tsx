@@ -140,7 +140,7 @@ function Section({
   return (
     <section className="panel">
       <div className="flex items-baseline justify-between mb-3">
-        <div className="panel-title mb-0">{title}</div>
+        <div className="panel-title mb-0 font-bold">{title}</div>
         {count != null && <div className="text-[11px] text-white/40">{count} rows</div>}
       </div>
       {children}

@@ -131,7 +131,7 @@ export function SourcesPanel({ sources }: { sources: SourcesSummary | null }) {
   if (!sources || !sources.manifest) {
     return (
       <div className="panel">
-        <div className="panel-title">Sources</div>
+        <div className="panel-title font-bold">Sources</div>
         <div className="text-sm text-white/40 italic">no sources.yaml on disk</div>
       </div>
     );
@@ -247,7 +247,7 @@ export function VerifyPanel({ report }: { report: VerifyReport | null }) {
   if (!report) {
     return (
       <div className="panel">
-        <div className="panel-title">Verify-report</div>
+        <div className="panel-title font-bold">Verify-report</div>
         <div className="text-sm text-white/50">
           No <code className="font-mono">verify-report.md</code> on disk. Run the{" "}
           <code className="font-mono">cross-check-extraction</code> skill to generate one.

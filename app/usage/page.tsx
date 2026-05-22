@@ -198,7 +198,7 @@ export default function UsagePage() {
       {/* Daily sparkline + chart */}
       <section className="panel">
         <div className="flex items-baseline justify-between mb-3">
-          <h2 className="panel-title !mb-0">Daily spend</h2>
+          <h2 className="panel-title !mb-0 font-bold">Daily spend</h2>
           <div className="text-[11px] text-white/40 font-mono">
             {daily[0]?.day} → {daily.at(-1)?.day}
           </div>
@@ -244,7 +244,7 @@ export default function UsagePage() {
       {/* Two-column: top products + per-schema */}
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
         <section className="panel">
-          <h2 className="panel-title">Top products by cost</h2>
+          <h2 className="panel-title font-bold">Top products by cost</h2>
           {topProducts.length === 0 ? (
             <p className="text-sm text-white/40">No completed results yet.</p>
           ) : (
@@ -294,7 +294,7 @@ export default function UsagePage() {
         </section>
 
         <section className="panel">
-          <h2 className="panel-title">Per-schema spend</h2>
+          <h2 className="panel-title font-bold">Per-schema spend</h2>
           {schemas.length === 0 ? (
             <p className="text-sm text-white/40">No runs yet.</p>
           ) : (
@@ -348,7 +348,7 @@ export default function UsagePage() {
 
       {/* Estimator drift list */}
       <section className="panel">
-        <h2 className="panel-title">Estimator drift, recent runs</h2>
+        <h2 className="panel-title font-bold">Estimator drift, recent runs</h2>
         {drift.length === 0 ? (
           <p className="text-sm text-white/40">
             No completed runs with both estimate and actual recorded.

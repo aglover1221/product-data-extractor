@@ -181,7 +181,7 @@ export default function ExtractForm(props: ExtractFormProps) {
   return (
     <div className="space-y-6">
       <section className="panel">
-        <div className="panel-title">Category</div>
+        <div className="panel-title font-bold">Category</div>
         <div className="flex flex-wrap gap-2">
           {categories.map(c => (
             <button
@@ -211,7 +211,7 @@ export default function ExtractForm(props: ExtractFormProps) {
 
       <section className="panel">
         <div className="flex items-baseline justify-between mb-3">
-          <div className="panel-title mb-0">Products</div>
+          <div className="panel-title mb-0 font-bold">Products</div>
           <div className="text-[11px] text-white/40">
             {selected.size} of {products.length} selected
           </div>
@@ -297,7 +297,7 @@ export default function ExtractForm(props: ExtractFormProps) {
       </section>
 
       <section className="panel">
-        <div className="panel-title">Cost estimate</div>
+        <div className="panel-title font-bold">Cost estimate</div>
         {!estimate ? (
           <div className="text-sm text-white/50">
             click <span className="text-white">Estimate cost</span> to compute

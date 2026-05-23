@@ -32,7 +32,7 @@ export default function DiscoverIndexPage() {
                   <th>Vendor</th>
                   <th>Portfolio</th>
                   <th>Status</th>
-                  <th className="text-right">Products</th>
+                  <th>Products</th>
                   <th>Started</th>
                   <th></th>
                 </tr>
@@ -46,7 +46,7 @@ export default function DiscoverIndexPage() {
                     <td>
                       <span className="chip">{d.status}</span>
                     </td>
-                    <td className="text-right">{d.product_count}</td>
+                    <td>{d.product_count}</td>
                     <td className="text-xs text-white/50">{d.started_at?.slice(0, 19) ?? ""}</td>
                     <td>
                       <Link href={`/pipeline/discover/${d.id}`} className="text-sm">

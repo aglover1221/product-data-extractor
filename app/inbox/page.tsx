@@ -153,7 +153,7 @@ export default function InboxPage({
                   <td className="text-[11px] text-white/50 font-mono text-center">
                     {ageString(a.created_at)}
                   </td>
-                  <td>
+                  <td className = "text-center">
                     {a.type === "flag" && a.status === "open" ? (
                       <SpotfixButton
                         productSlug={slug}

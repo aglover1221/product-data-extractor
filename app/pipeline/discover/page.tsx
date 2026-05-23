@@ -47,7 +47,7 @@ export default function DiscoverIndexPage() {
                       <span className="chip">{d.status}</span>
                     </td>
                     <td className="!text-center">{d.product_count}</td>
-                    <td className="text-xs text-white/50 !text-center">{d.started_at?.slice(0, 19) ?? ""}</td>
+                    <td className="text-xs text-white/50 !text-center">{new Date(d.started_at?.slice(0, 19)).toLocaleString() ?? ""}</td>
                     <td className="!text-center">
                       <Link href={`/pipeline/discover/${d.id}`} className="text-sm">
                         Open →

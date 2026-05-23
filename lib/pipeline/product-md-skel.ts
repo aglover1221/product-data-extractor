@@ -40,8 +40,33 @@ const VENDOR_DISPLAY: Record<string, string> = {
   lenovo: "Lenovo",
 };
 
+const SAFE_PATH_SEGMENT = /^[a-z0-9][a-z0-9._-]*$/i;
+
 function vendorDisplayName(vendor: string): string {
   return VENDOR_DISPLAY[vendor.toLowerCase()] ?? vendor;
+}
+
+export function assertSafePathSegment(label: string, value: string): void {
+  if (!SAFE_PATH_SEGMENT.test(value) || value === "." || value === "..") {
+    throw new Error(`${label} must be a safe path segment`);
+  }
+}
+
+export function assertInsideDataRoot(absPath: string): void {
+  const root = path.resolve(env.PRODUCT_MCP_DATA_DIR);
+  const target = path.resolve(absPath);
+  const rel = path.relative(root, target);
+  if (rel === "" || (!rel.startsWith("..") && !path.isAbsolute(rel))) return;
+  throw new Error("path escapes PRODUCT_MCP_DATA_DIR");
+}
+
+export function resolveDataRootPath(relPath: string): string {
+  if (!relPath || path.isAbsolute(relPath)) {
+    throw new Error("path must be relative to PRODUCT_MCP_DATA_DIR");
+  }
+  const abs = path.resolve(env.PRODUCT_MCP_DATA_DIR, relPath);
+  assertInsideDataRoot(abs);
+  return abs;
 }
 
 export function productDirAbs({
@@ -50,17 +75,26 @@ export function productDirAbs({
   line,
   slug,
 }: Pick<ProductMdSkelInput, "category" | "vendor" | "line" | "slug">): string {
-  return path.join(
-    path.resolve(env.PRODUCT_MCP_DATA_DIR),
+  assertSafePathSegment("category", category);
+  assertSafePathSegment("vendor", vendor);
+  assertSafePathSegment("line", line);
+  assertSafePathSegment("slug", slug);
+
+  const dir = path.resolve(
+    env.PRODUCT_MCP_DATA_DIR,
     category,
     vendor.toLowerCase(),
     line,
     slug
   );
+  assertInsideDataRoot(dir);
+  return dir;
 }
 
 export function productMdAbs(input: Pick<ProductMdSkelInput, "category" | "vendor" | "line" | "slug">): string {
-  return path.join(productDirAbs(input), `${input.slug}.md`);
+  const mdAbs = path.resolve(productDirAbs(input), `${input.slug}.md`);
+  assertInsideDataRoot(mdAbs);
+  return mdAbs;
 }
 
 export function writeProductMdSkeleton(

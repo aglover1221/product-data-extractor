@@ -172,14 +172,14 @@ function CpuSkusTable({
         <thead>
           <tr>
             <th>Model</th>
-            <th className="!text-center">Family</th>
+            <th>Family</th>
             <th className="!text-center">Clock</th>
             <th className="!text-center">Cache</th>
             <th className="!text-center">Cores</th>
             <th className="!text-center">Threads</th>
             <th className="!text-center">Mem MT/s</th>
             <th className="!text-center">TDP</th>
-            <th className="!text-center">DLC</th>
+            <th>DLC</th>
             <AnnotationHeader enabled={!!slug && !!arrayName} />
           </tr>
         </thead>
@@ -187,14 +187,14 @@ function CpuSkusTable({
           {rows.map((r, i) => (
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="font-medium">{r.model}</td>
-              <td className="text-white/70 !text-center">{r.family}</td>
+              <td className="text-white/70">{r.family}</td>
               <td className="!text-center">{r.clock_ghz ? `${r.clock_ghz} GHz` : "—"}</td>
               <td className="!text-center">{r.cache_mb ? `${r.cache_mb} MB` : "—"}</td>
               <td className="!text-center">{r.cores ?? "—"}</td>
               <td className="!text-center">{r.threads ?? "—"}</td>
               <td className="!text-center">{r.memory_speed_mt_s ?? "—"}</td>
               <td className="!text-center">{r.tdp_w ? `${r.tdp_w} W` : "—"}</td>
-              <td className="!text-center">
+              <td>
                 <span className={r.requires_dlc ? "pill pill-on" : "pill pill-off"}>
                   {r.requires_dlc ? "req" : "no"}
                 </span>
@@ -223,11 +223,11 @@ function DimmsTable({
   if (!rows?.length) return <Empty />;
   return (
     <div className="overflow-x-auto">
-      <table className="data-table min-w-[900px]">
+      <table className="data-table min-w-[760px]">
         <thead>
           <tr>
             <th>Type</th>
-            <th className="!text-center">Family</th>
+            <th>Family</th>
             <th className="!text-center">1DPC</th>
             <th className="!text-center">2DPC</th>
             <th className="!text-center">Capacity</th>
@@ -240,7 +240,7 @@ function DimmsTable({
           {rows.map((r, i) => (
             <tr key={i} title={evidenceTitle(r.evidence)}>
               <td className="font-medium">{r.dimm_type}</td>
-              <td className="text-white/70 !text-center">{r.family}</td>
+              <td className="text-white/70">{r.family}</td>
               <td className="!text-center">{r.speed_mt_s_1dpc ? `${r.speed_mt_s_1dpc} MT/s` : "—"}</td>
               <td className="!text-center">{r.speed_mt_s_2dpc ? `${r.speed_mt_s_2dpc} MT/s` : "—"}</td>
               <td className="!text-center">{r.capacity_gb ? `${r.capacity_gb} GB` : "—"}</td>
@@ -296,10 +296,10 @@ function DriveConfigsTable({
                       </span>
                     ))
                   : "—"}
-              </td >
+              </td>
               <td className="!text-center">{r.is_rear ? "yes" : "—"}</td>
               <td className="!text-center">{r.is_front_io ? "yes" : "—"}</td>
-              <td>
+              <td className="!text-center">
                 {r.max_raw_capacity_tb ? `${r.max_raw_capacity_tb.toFixed(0)} TB` : "—"}
               </td>
               <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
@@ -329,7 +329,7 @@ function SupportedDrivesTable({
         <thead>
           <tr>
             <th>Form factor</th>
-            <th >Type</th>
+            <th>Type</th>
             <th>Speed</th>
             <th>Class</th>
             <th>Capacities</th>
@@ -374,9 +374,9 @@ function StorageControllersTable({
       <thead>
         <tr>
           <th>Name</th>
-          <th>Category</th>
-          <th>External</th>
-          <th>Notes</th>
+          <th className = "!text-center">Category</th>
+          <th className = "!text-center">External</th>
+          <th className = "!text-center">Notes</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
       </thead>
@@ -384,11 +384,11 @@ function StorageControllersTable({
         {rows.map((r, i) => (
           <tr key={i} title={evidenceTitle(r.evidence)}>
             <td className="font-medium">{r.name}</td>
-            <td>
+            <td className = "!text-center">
               <span className="chip">{r.category}</span>
             </td>
-            <td>{r.is_external ? "yes" : "—"}</td>
-            <td className="text-white/60 text-[12px]">{r.notes ?? ""}</td>
+            <td className = "!text-center">{r.is_external ? "yes" : "—"}</td>
+            <td className="text-white/60 text-[12px] !text-center">{r.notes ?? ""}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
         ))}
@@ -454,8 +454,8 @@ function GpuFormFactorTable({
       <thead>
         <tr>
           <th>Form factor</th>
-          <th className="!text-center">Max count</th>
-          <th className="!text-center">Max W per GPU</th>
+          <th className="!!text-center">Max count</th>
+          <th className="!!text-center">Max W per GPU</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
       </thead>
@@ -463,8 +463,8 @@ function GpuFormFactorTable({
         {rows.map((r, i) => (
           <tr key={i} title={evidenceTitle(r.evidence)}>
             <td className="font-medium">{r.form_factor}</td>
-            <td className="!text-center">{r.max_count ?? "—"}</td>
-            <td className="!text-center">{r.max_power_w_per_gpu ? `${r.max_power_w_per_gpu} W` : "—"}</td>
+            <td className="!!text-center">{r.max_count ?? "—"}</td>
+            <td className="!!text-center">{r.max_power_w_per_gpu ? `${r.max_power_w_per_gpu} W` : "—"}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
         ))}
@@ -641,7 +641,7 @@ function DpusTable({
         <tr>
           <th>Model</th>
           <th>Vendor</th>
-          <th className="!text-center">Port speed</th>
+          <th>Port speed</th>
           <th className="!text-center">Ports</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
@@ -651,7 +651,7 @@ function DpusTable({
           <tr key={i} title={evidenceTitle(r.evidence)}>
             <td className="font-medium">{r.model}</td>
             <td className="text-white/70">{r.vendor}</td>
-            <td className="!text-center">{r.port_speed ?? "—"}</td>
+            <td>{r.port_speed ?? "—"}</td>
             <td className="!text-center">{r.port_count ?? "—"}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
@@ -761,22 +761,22 @@ function PsuOptionsTable({
     <table className="data-table">
       <thead>
         <tr>
-          <th className="!text-left">Output</th>
-          <th>Class</th>
-          <th>Input</th>
-          <th>At launch</th>
-          <th>Notes</th>
+          <th>Output</th>
+          <th className ="!text-center">Class</th>
+          <th className ="!text-center">Input</th>
+          <th className ="!text-center">At launch</th>
+          <th className ="!text-center">Notes</th>
           <AnnotationHeader enabled={!!slug && !!arrayName} />
         </tr>
       </thead>
       <tbody>
         {rows.map((r, i) => (
           <tr key={i} title={evidenceTitle(r.evidence)}>
-            <td className="!text-left font-medium">{r.output_w ? `${r.output_w} W` : "—"}</td>
-            <td>{r.efficiency_class ?? "—"}</td>
-            <td>{r.input ?? "—"}</td>
-            <td>{r.available_at_launch ? "yes" : "—"}</td>
-            <td className="text-white/60 text-[12px]">{r.notes ?? ""}</td>
+            <td className="font-medium">{r.output_w ? `${r.output_w} W` : "—"}</td>
+            <td className ="!text-center">{r.efficiency_class ?? "—"}</td>
+            <td className ="!text-center">{r.input ?? "—"}</td>
+            <td className ="!text-center">{r.available_at_launch ? "yes" : "—"}</td>
+            <td className="text-white/60 text-[12px] text-center">{r.notes ?? ""}</td>
             <RowAnnotationCell slug={slug} annotations={annotations} arrayName={arrayName} index={i} />
           </tr>
         ))}
@@ -808,7 +808,7 @@ function SourcesTable({ rows }: { rows: any[] }) {
             <td className="max-w-[320px]">{r.title}</td>
             <td className="text-[11px] text-white/60 font-mono">{r.local}</td>
             <td className="text-[11px] text-white/60 font-mono">{r.local_extraction ?? "—"}</td>
-            <td className="text-right">{r.pages ?? "—"}</td>
+            <td className="text-center">{r.pages ?? "—"}</td>
             <td className="text-[11px]">
               <span className="chip">{r.audit_status ?? "unchecked"}</span>{" "}
               <span className="text-white/40">{r.audit_date}</span>
@@ -907,8 +907,8 @@ export default function ProductPage({ params }: { params: { slug: string } }) {
             {d.extraction_metadata?.extractor ?? "—"}
           </div>
         </div>
-       <ReExtractButton
-           productSlug={d.slug}
+        <ReExtractButton
+          productSlug={d.slug}
           category={d.category}
           label="Re-extract"
         />

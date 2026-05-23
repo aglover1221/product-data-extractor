@@ -96,19 +96,19 @@ export default function InboxPage({
             <thead>
               <tr>
                 <th>Product</th>
-                <th>Field</th>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Text</th>
-                <th>Created</th>
-                <th>Age</th>
-                <th>Action</th>
+                <th className="!text-center">Field</th>
+                <th className="!text-center">Type</th>
+                <th className="!text-center">Status</th>
+                <th className="!text-center">Text</th>
+                <th className="!text-center">Created</th>
+                <th className="!text-center">Age</th>
+                <th className="!text-center">Action</th>
               </tr>
             </thead>
             <tbody>
               {all.map(({ slug, model, vendor, product_line, annotation: a }) => (
                 <tr key={`${slug}-${a.id}`} className="hover:bg-white/[0.04]">
-                  <td>
+                  <td className="!text-center">
                     <Link href={`/products/${slug}`} className="font-medium">
                       {model}
                     </Link>
@@ -116,8 +116,8 @@ export default function InboxPage({
                       {vendor.replace(" Technologies", "")} / {product_line}
                     </div>
                   </td>
-                  <td className="font-mono text-[11px] text-white/80">{a.field_path}</td>
-                  <td>
+                  <td className="!text-center font-mono text-[11px] text-white/80">{a.field_path}</td>
+                  <td className="!text-center">
                     <span
                       className={`pill ${
                         a.type === "flag"
@@ -128,7 +128,7 @@ export default function InboxPage({
                       {a.type}
                     </span>
                   </td>
-                  <td>
+                  <td className="!text-center">
                     <span
                       className={`pill ${
                         a.status === "open"
@@ -142,18 +142,18 @@ export default function InboxPage({
                     </span>
                   </td>
                   <td
-                    className="text-[12px] text-white/80 max-w-[360px] truncate"
+                    className="text-[12px] text-white/80 max-w-[360px] truncate text-center"
                     title={a.text}
                   >
                     {a.text}
                   </td>
-                  <td className="text-[11px] text-white/50 font-mono">
+                  <td className="text-[11px] text-white/50 font-mono text-center">
                     {a.created_at.split("T")[0]}
                   </td>
-                  <td className="text-[11px] text-white/50 font-mono">
+                  <td className="text-[11px] text-white/50 font-mono text-center">
                     {ageString(a.created_at)}
                   </td>
-                  <td>
+                  <td className="text-center">
                     {a.type === "flag" && a.status === "open" ? (
                       <SpotfixButton
                         productSlug={slug}

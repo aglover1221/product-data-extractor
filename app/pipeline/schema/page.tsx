@@ -63,26 +63,43 @@ type SchemaRow = {
   status: string;
 };
 
+// Shared column widths for both the Base schemas and Overlays tables so they
+// align column-by-column regardless of the names/paths they happen to contain.
+// Combined with `table-fixed` on the <table>, these widths are authoritative.
+const SCHEMA_COL_WIDTHS = [
+  "22%", // Name
+  "16%", // Current version
+  "10%", // Versions
+  "18%", // Last edited
+  "12%", // Status
+  "22%", // Path
+] as const;
+
 function Section({ title, rows }: { title: string; rows: SchemaRow[] }) {
   return (
     <section>
       <div className="panel-title">{title}</div>
       <div className="panel overflow-x-auto">
-        <table className="data-table">
+        <table className="data-table table-fixed w-full min-w-[860px]">
+          <colgroup>
+            {SCHEMA_COL_WIDTHS.map((w, i) => (
+              <col key={i} style={{ width: w }} />
+            ))}
+          </colgroup>
           <thead>
             <tr>
               <th>Name</th>
-              <th>Current version</th>
-              <th className="!text-left">Versions</th>
-              <th>Last edited</th>
-              <th>Status</th>
-              <th>Path</th>
+              <th className="!text-center">Current version</th>
+              <th className="!text-center">Versions</th>
+              <th className="!text-center">Last edited</th>
+              <th className="!text-center">Status</th>
+              <th className="!text-center">Path</th>
             </tr>
           </thead>
           <tbody>
             {rows.map((r) => (
               <tr key={r.name} className="hover:bg-white/[0.04]">
-                <td>
+                <td className="truncate">
                   <Link
                     href={`/pipeline/schema/${r.name}`}
                     className="font-medium"
@@ -90,17 +107,22 @@ function Section({ title, rows }: { title: string; rows: SchemaRow[] }) {
                     {r.name}
                   </Link>
                 </td>
-                <td className="font-mono text-[12px]">{r.current_version}</td>
-                <td className="!text-left text-white/60">{r.version_count}</td>
-                <td className="text-[11px] text-white/60">
+                <td className="font-mono text-[12px] text-center">{r.current_version}</td>
+                <td className="text-center text-white/60">{r.version_count}</td>
+                <td className="text-[11px] text-white/60 text-center">
                   {r.last_edited_at
                     ? new Date(r.last_edited_at).toISOString().slice(0, 16).replace("T", " ")
                     : "—"}
                 </td>
-                <td>
+                <td className="text-center">
                   <StatusPill value={r.status} />
                 </td>
-                <td className="text-[11px] text-white/40 font-mono">{r.rel_path}</td>
+                <td
+                  className="text-[11px] text-white/40 font-mono truncate text-center"
+                  title={r.rel_path}
+                >
+                  {r.rel_path}
+                </td>
               </tr>
             ))}
           </tbody>

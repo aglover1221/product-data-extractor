@@ -29,26 +29,26 @@ export default function DiscoverIndexPage() {
               <thead>
                 <tr>
                   <th>ID</th>
-                  <th>Vendor</th>
-                  <th>Portfolio</th>
-                  <th>Status</th>
-                  <th className="text-right">Products</th>
-                  <th>Started</th>
-                  <th></th>
+                  <th className="!text-center">Vendor</th>
+                  <th className="!text-center">Portfolio</th>
+                  <th className="!text-center">Status</th>
+                  <th className="!text-center">Products</th>
+                  <th className="!text-center">Started</th>
+                  <th className="!text-center"></th>
                 </tr>
               </thead>
               <tbody>
                 {rows.map((d: any) => (
                   <tr key={d.id} className="hover:bg-white/[0.04]">
                     <td className="text-white/50">{d.id}</td>
-                    <td>{d.vendor}</td>
-                    <td>{d.portfolio}</td>
-                    <td>
+                    <td className="!text-center">{d.vendor}</td>
+                    <td className="!text-center">{d.portfolio}</td>
+                    <td className="!text-center">
                       <span className="chip">{d.status}</span>
                     </td>
-                    <td className="text-right">{d.product_count}</td>
-                    <td className="text-xs text-white/50">{d.started_at?.slice(0, 19) ?? ""}</td>
-                    <td>
+                    <td className="!text-center">{d.product_count}</td>
+                    <td className="text-xs text-white/50 !text-center">{new Date(d.started_at?.slice(0, 19)).toLocaleString() ?? ""}</td>
+                    <td className="!text-center">
                       <Link href={`/pipeline/discover/${d.id}`} className="text-sm">
                         Open →
                       </Link>

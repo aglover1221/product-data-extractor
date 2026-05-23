@@ -22,5 +22,15 @@ export async function POST(req: NextRequest) {
   if (!slug) {
     return NextResponse.json({ error: "productSlug required" }, { status: 400 });
   }
-  return NextResponse.json(deleteOrphans(slug, { dryRun: body.dryRun === true }));
+  const result = deleteOrphans(slug, {
+    dryRun: body.dryRun !== false,
+    confirmDelete: body.confirmDelete === true,
+  });
+  if (result.manifestMissing && body.dryRun === false) {
+    return NextResponse.json(result, { status: 409 });
+  }
+  if (result.requiresConfirmation) {
+    return NextResponse.json(result, { status: 400 });
+  }
+  return NextResponse.json(result);
 }

@@ -101,8 +101,8 @@ export default function InboxPage({
                 <th>Status</th>
                 <th>Text</th>
                 <th>Created</th>
-                <th className="text-right">Age</th>
-                <th className="text-right">Action</th>
+                <th>Age</th>
+                <th>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -150,10 +150,10 @@ export default function InboxPage({
                   <td className="text-[11px] text-white/50 font-mono">
                     {a.created_at.split("T")[0]}
                   </td>
-                  <td className="text-right text-[11px] text-white/50 font-mono">
+                  <td className="text-[11px] text-white/50 font-mono">
                     {ageString(a.created_at)}
                   </td>
-                  <td className="text-right">
+                  <td>
                     {a.type === "flag" && a.status === "open" ? (
                       <SpotfixButton
                         productSlug={slug}

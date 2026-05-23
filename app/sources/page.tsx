@@ -38,8 +38,8 @@ export default function SourcesPage() {
               <tr>
                 <th>Product</th>
                 <th>Vendor / Line</th>
-                <th className="text-right">Files</th>
-                <th className="text-right">Size</th>
+                <th>Files</th>
+                <th>Size</th>
                 <th>Required types</th>
                 <th>Failures</th>
                 <th>Pipeline</th>
@@ -63,8 +63,8 @@ export default function SourcesPage() {
                   <td className="text-white/70">
                     {s.vendor} / {s.product_line}
                   </td>
-                  <td className="text-right">{s.source_files.length}</td>
-                  <td className="text-right text-[11px] text-white/60">
+                  <td>{s.source_files.length}</td>
+                  <td className="text-[11px] text-white/60">
                     {formatBytes(s.total_bytes)}
                   </td>
                   <td>

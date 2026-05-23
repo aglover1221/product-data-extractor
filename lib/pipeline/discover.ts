@@ -247,7 +247,7 @@ export function listDiscoveries() {
        FROM discoveries d
        LEFT JOIN discovered_products dp ON dp.discovery_id = d.id
        GROUP BY d.id
-       ORDER BY d.started_at DESC`
+       ORDER BY d.started_at ASC`
     )
     .all() as any[];
 }

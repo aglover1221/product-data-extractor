@@ -34,6 +34,8 @@ export interface OrphanFile {
 export interface OrphanReport {
   productSlug: string;
   productDir: string;
+  manifestPath: string | null;
+  manifestMissing: boolean;
   manifestFilenames: string[];
   orphans: OrphanFile[];
 }
@@ -49,12 +51,25 @@ export function listOrphans(productSlug: string): OrphanReport {
     return {
       productSlug,
       productDir: "",
+      manifestPath: null,
+      manifestMissing: true,
       manifestFilenames: [],
       orphans: [],
     };
   }
   const sourceDir = path.join(ctx.product_dir, "source");
-  const manifest = readSourcesYaml(path.join(ctx.product_dir, "sources.yaml"));
+  const manifestPath = path.join(ctx.product_dir, "sources.yaml");
+  const manifest = readSourcesYaml(manifestPath);
+  if (!manifest) {
+    return {
+      productSlug,
+      productDir: ctx.product_dir,
+      manifestPath,
+      manifestMissing: true,
+      manifestFilenames: [],
+      orphans: [],
+    };
+  }
   const manifestFilenames = (manifest?.sources ?? [])
     .map((s) => s.filename)
     .filter(Boolean) as string[];
@@ -71,6 +86,8 @@ export function listOrphans(productSlug: string): OrphanReport {
     return {
       productSlug,
       productDir: ctx.product_dir,
+      manifestPath,
+      manifestMissing: false,
       manifestFilenames,
       orphans,
     };
@@ -91,6 +108,8 @@ export function listOrphans(productSlug: string): OrphanReport {
   return {
     productSlug,
     productDir: ctx.product_dir,
+    manifestPath,
+    manifestMissing: false,
     manifestFilenames,
     orphans,
   };
@@ -98,21 +117,38 @@ export function listOrphans(productSlug: string): OrphanReport {
 
 export interface DeleteOrphansResult {
   productSlug: string;
+  dryRun: boolean;
+  manifestMissing: boolean;
+  requiresConfirmation: boolean;
+  refusedReason: string | null;
   deleted: string[];
   errors: { filename: string; error: string }[];
 }
 
 export function deleteOrphans(
   productSlug: string,
-  options: { dryRun?: boolean } = {}
+  options: { dryRun?: boolean; confirmDelete?: boolean } = {}
 ): DeleteOrphansResult {
   const report = listOrphans(productSlug);
+  const dryRun = options.dryRun !== false;
   const result: DeleteOrphansResult = {
     productSlug,
+    dryRun,
+    manifestMissing: report.manifestMissing,
+    requiresConfirmation: !dryRun && options.confirmDelete !== true,
+    refusedReason: null,
     deleted: [],
     errors: [],
   };
-  if (options.dryRun) return result;
+  if (report.manifestMissing) {
+    result.refusedReason = "Refusing to delete orphans because sources.yaml is missing";
+    return result;
+  }
+  if (dryRun) return result;
+  if (options.confirmDelete !== true) {
+    result.refusedReason = "Refusing to delete orphans without confirmDelete=true";
+    return result;
+  }
   for (const orphan of report.orphans) {
     try {
       fs.unlinkSync(orphan.absPath);

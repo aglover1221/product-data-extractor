@@ -108,7 +108,7 @@ export default function InboxPage({
             <tbody>
               {all.map(({ slug, model, vendor, product_line, annotation: a }) => (
                 <tr key={`${slug}-${a.id}`} className="hover:bg-white/[0.04]">
-                  <td className="!text-center">
+                  <td>
                     <Link href={`/products/${slug}`} className="font-medium">
                       {model}
                     </Link>
@@ -153,15 +153,14 @@ export default function InboxPage({
                   <td className="text-[11px] text-white/50 font-mono text-center">
                     {ageString(a.created_at)}
                   </td>
-                  <td className="text-center">
+                  <td>
                     {a.type === "flag" && a.status === "open" ? (
                       <SpotfixButton
                         productSlug={slug}
                         annotationId={a.id}
                         size="sm"
                       />
-                    ) : (
-                      <Link
+                    ) : (                      <Link
                         href={`/pipeline/spotfix/${slug}`}
                         className="text-[10px] text-white/40 hover:text-white/70"
                       >

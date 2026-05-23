@@ -20,7 +20,11 @@ import {
   estimateTokensFromText,
   messagesCreate,
 } from "@/lib/integrations/anthropic";
-import { writeProductMdSkeleton } from "@/lib/pipeline/product-md-skel";
+import {
+  assertSafePathSegment,
+  resolveDataRootPath,
+  writeProductMdSkeleton,
+} from "@/lib/pipeline/product-md-skel";
 
 const PROMPTS_DIR = path.resolve(process.cwd(), "lib/prompts");
 const DATA_DIR = path.resolve(env.PRODUCT_MCP_DATA_DIR);
@@ -57,7 +61,12 @@ export function resolveSourceLineContext(
   const sourceIdx = parts.lastIndexOf("source");
   if (sourceIdx === -1) return null;
   const prefix = parts.slice(0, sourceIdx);
-  const sidecarAbs = path.resolve(DATA_DIR, sourcePathRel);
+  let sidecarAbs: string;
+  try {
+    sidecarAbs = resolveDataRootPath(sourcePathRel);
+  } catch {
+    return null;
+  }
   if (!fs.existsSync(sidecarAbs)) return null;
 
   if (prefix.length === 3) {
@@ -203,7 +212,8 @@ export async function previewProductsFromSource(
 ): Promise<PreviewResult> {
   let ctx = resolveSourceLineContext(sourcePathRel);
   if (!ctx && override?.category && override?.vendor && override?.productLine) {
-    const sidecarAbs = path.resolve(DATA_DIR, sourcePathRel);
+    assertSourceOverride(override);
+    const sidecarAbs = resolveDataRootPath(sourcePathRel);
     if (!fs.existsSync(sidecarAbs)) {
       throw new Error(`Sidecar not found: ${sidecarAbs}`);
     }
@@ -220,6 +230,7 @@ export async function previewProductsFromSource(
       `Cannot resolve product line for ${sourcePathRel}. Pass override { category, vendor, productLine } if it's a category-scope source.`
     );
   }
+  assertSourceContext(ctx);
 
   const sourceBody = fs.readFileSync(ctx.sidecarAbs, "utf8");
   const built = buildPrompt({ ctx, sourceBody });
@@ -318,7 +329,8 @@ export async function commitProductsFromSource(
 ): Promise<CommitResult> {
   let ctx = resolveSourceLineContext(sourcePathRel);
   if (!ctx && override?.category && override?.vendor && override?.productLine) {
-    const sidecarAbs = path.resolve(DATA_DIR, sourcePathRel);
+    assertSourceOverride(override);
+    const sidecarAbs = resolveDataRootPath(sourcePathRel);
     if (!fs.existsSync(sidecarAbs)) {
       throw new Error(`Sidecar not found: ${sidecarAbs}`);
     }
@@ -335,6 +347,8 @@ export async function commitProductsFromSource(
       `Cannot resolve product line for ${sourcePathRel}. Pass override { category, vendor, productLine } for category-scope sources.`
     );
   }
+  assertSourceContext(ctx);
+  for (const slug of slugs) assertSafePathSegment("slug", slug);
 
   const created: CommitResult["created"] = [];
   const skipped: CommitResult["skipped"] = [];
@@ -368,4 +382,20 @@ export async function commitProductsFromSource(
   }
 
   return { ctx, created, skipped };
+}
+
+function assertSourceOverride(override: {
+  category?: string;
+  vendor?: string;
+  productLine?: string;
+}): void {
+  assertSafePathSegment("category", String(override.category ?? ""));
+  assertSafePathSegment("vendor", String(override.vendor ?? ""));
+  assertSafePathSegment("productLine", String(override.productLine ?? ""));
+}
+
+function assertSourceContext(ctx: Pick<SourceLineContext, "category" | "vendor" | "productLine">): void {
+  assertSafePathSegment("category", ctx.category);
+  assertSafePathSegment("vendor", ctx.vendor);
+  assertSafePathSegment("productLine", ctx.productLine);
 }

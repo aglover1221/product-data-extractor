@@ -30,6 +30,7 @@ import {
 } from "@/lib/integrations/anthropic";
 import { readProductMdManifest, type ManifestSource } from "@/lib/sources";
 import { parseMarkdown } from "@/lib/safe-matter";
+import { invalidateExtractionCache } from "@/lib/extractions";
 
 const DATA_DIR = env.PRODUCT_MCP_DATA_DIR;
 const SCHEMAS_DIR = path.join(DATA_DIR, "schemas");
@@ -428,5 +429,6 @@ export function writeExtractionJson(
 ): string {
   const out = path.join(productDir, "extraction.json");
   fs.writeFileSync(out, JSON.stringify(parsed, null, 2) + "\n", "utf8");
+  invalidateExtractionCache();
   return out;
 }

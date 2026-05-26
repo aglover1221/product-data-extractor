@@ -15,6 +15,7 @@
  */
 import fs from "node:fs";
 import path from "node:path";
+import { invalidateExtractionCache } from "@/lib/extractions";
 
 export type Tokens = (string | number)[];
 
@@ -123,6 +124,9 @@ export function atomicWriteJson(filePath: string, data: any): void {
   const tmp = path.join(dir, `.${path.basename(filePath)}.${process.pid}.${Date.now()}.tmp`);
   fs.writeFileSync(tmp, JSON.stringify(data, null, 2) + "\n", "utf8");
   fs.renameSync(tmp, filePath);
+  if (path.basename(filePath) === "extraction.json") {
+    invalidateExtractionCache();
+  }
 }
 
 /** Append a row to extraction_metadata.spot_fix_log[] (creating the array if missing). */

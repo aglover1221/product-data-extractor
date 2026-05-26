@@ -30,6 +30,7 @@ import {
 } from "@/lib/integrations/anthropic";
 import { readProductMdManifest, type ManifestSource } from "@/lib/sources";
 import { parseMarkdown } from "@/lib/safe-matter";
+import { atomicWriteJson } from "@/lib/pipeline/extraction-paths";
 
 const DATA_DIR = env.PRODUCT_MCP_DATA_DIR;
 const SCHEMAS_DIR = path.join(DATA_DIR, "schemas");
@@ -427,6 +428,9 @@ export function writeExtractionJson(
   parsed: unknown
 ): string {
   const out = path.join(productDir, "extraction.json");
-  fs.writeFileSync(out, JSON.stringify(parsed, null, 2) + "\n", "utf8");
+  // tmp + rename through atomicWriteJson — matches the spot-fix path
+  // (lib/pipeline/spotfix.ts) and every other canonical-file writer in the
+  // repo. A crash mid-write leaves the prior good file intact.
+  atomicWriteJson(out, parsed);
   return out;
 }

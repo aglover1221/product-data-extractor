@@ -81,9 +81,7 @@ export async function handleReductoPoll(
 
   if (mapped === "failed") {
     const errMsg = `Reducto job ${reductoJobId} failed: ${meta.status}`;
-    db.prepare(
-      `UPDATE parse_runs SET status = 'failed', error = ?, completed_at = ? WHERE id = ?`
-    ).run(errMsg, new Date().toISOString(), parseRunId);
+    markParseRunFailedIdempotent(db, parseRunId, errMsg);
     console.error(`[reducto-poll] run=${parseRunId} ${errMsg}`);
     return;
   }
@@ -96,10 +94,29 @@ export async function handleReductoPoll(
     );
   } catch (err) {
     const msg = (err as Error).message;
-    db.prepare(
-      `UPDATE parse_runs SET status = 'failed', error = ?, completed_at = ? WHERE id = ?`
-    ).run(msg, new Date().toISOString(), parseRunId);
+    markParseRunFailedIdempotent(db, parseRunId, msg);
     console.error(`[reducto-poll] run=${parseRunId} processing failed: ${msg}`);
     throw err;
   }
+}
+
+/**
+ * Move a parse_run to `failed` only if it hasn't already terminalised. The
+ * worker queue re-claims jobs whose lease expired, so a transient error on
+ * the second attempt of a reclaim must NOT erase a `completed` row from the
+ * first attempt.
+ */
+function markParseRunFailedIdempotent(
+  db: ReturnType<typeof getStudioDb>,
+  parseRunId: number,
+  error: string
+): void {
+  db.prepare(
+    `UPDATE parse_runs
+        SET status = 'failed',
+            error = ?,
+            completed_at = ?
+      WHERE id = ?
+        AND status IN ('queued', 'running')`
+  ).run(error, new Date().toISOString(), parseRunId);
 }

@@ -12,23 +12,37 @@
  * the path resolves to such a wrapped scalar, getField returns the wrapper
  * and unwrapValue returns just the value. setField writes to `wrapper.value`
  * and replaces `wrapper.evidence` with the supplied evidence (per skill rules).
+ *
+ * Security note: field_path strings ultimately come from the /api/annotations
+ * route and from spotfix_runs rows. Without the guards in lib/safe-path.ts,
+ * a segment like `__proto__` would let setField write to Object.prototype
+ * — a process-wide prototype-pollution primitive. Every helper here routes
+ * through tokenizePathSafe and treats malformed / forbidden paths as
+ * benign no-ops (read helpers) or typed failure results (setField).
  */
 import fs from "node:fs";
 import path from "node:path";
+import {
+  FORBIDDEN_SEGMENTS,
+  tokenizePathSafe,
+  type Tokens as SafeTokens,
+} from "@/lib/safe-path";
 
-export type Tokens = (string | number)[];
+export type Tokens = SafeTokens;
 
-/** Parse a field_path like `cpu_skus[3].tdp_w` or `a.b.0.c` into tokens. */
+/**
+ * Parse a field_path like `cpu_skus[3].tdp_w` or `a.b.0.c` into tokens.
+ *
+ * Throws on empty input, malformed shape, or a forbidden segment
+ * (`__proto__` / `prototype` / `constructor`). Callers that need a
+ * non-throwing form should use `tokenizePathSafe` from `@/lib/safe-path`.
+ */
 export function tokenizePath(fieldPath: string): Tokens {
-  const out: Tokens = [];
-  // Normalize bracket notation `[3]` → `.3` then split on dots.
-  const normalized = fieldPath.replace(/\[(\d+)\]/g, ".$1");
-  for (const seg of normalized.split(".")) {
-    if (seg === "") continue;
-    if (/^\d+$/.test(seg)) out.push(Number(seg));
-    else out.push(seg);
+  const result = tokenizePathSafe(fieldPath);
+  if (!result.ok) {
+    throw new Error(result.reason);
   }
-  return out;
+  return result.tokens;
 }
 
 /** Walk to the parent of the final path segment. Returns null if the parent doesn't exist. */
@@ -38,17 +52,23 @@ export function getParent(root: any, tokens: Tokens): { parent: any; key: string
   for (let i = 0; i < tokens.length - 1; i++) {
     const k = tokens[i];
     if (cur == null) return null;
+    // Belt-and-suspenders: tokenizePath already rejects forbidden segments,
+    // but if a caller bypasses tokenizePath and constructs tokens directly
+    // we still refuse to descend into prototype-shaped keys.
+    if (typeof k === "string" && FORBIDDEN_SEGMENTS.has(k)) return null;
     cur = (cur as any)[k as any];
   }
   if (cur == null) return null;
-  return { parent: cur, key: tokens[tokens.length - 1] };
+  const finalKey = tokens[tokens.length - 1];
+  if (typeof finalKey === "string" && FORBIDDEN_SEGMENTS.has(finalKey)) return null;
+  return { parent: cur, key: finalKey };
 }
 
-/** Returns the raw value at the path (the wrapper if wrapped); null if unresolved. */
+/** Returns the raw value at the path (the wrapper if wrapped); undefined if unresolved or unsafe. */
 export function getField(root: any, fieldPath: string): any {
-  const tokens = tokenizePath(fieldPath);
-  if (tokens.length === 0) return undefined;
-  const parent = getParent(root, tokens);
+  const tokenized = tokenizePathSafe(fieldPath);
+  if (!tokenized.ok) return undefined;
+  const parent = getParent(root, tokenized.tokens);
   if (!parent) return undefined;
   return (parent.parent as any)[parent.key as any];
 }
@@ -61,14 +81,25 @@ export function unwrapValue(field: any): any {
   return field;
 }
 
-/** Returns true if a field at this path resolves in the extraction object. */
+/**
+ * Returns true if a field at this path resolves in the extraction object.
+ * Unsafe or malformed paths resolve to false (they don't throw).
+ *
+ * Uses `Object.hasOwn` rather than `in` so the check cannot accidentally
+ * walk into the prototype chain even on a path that escaped tokenizePathSafe.
+ */
 export function pathResolves(root: any, fieldPath: string): boolean {
-  const tokens = tokenizePath(fieldPath);
-  if (tokens.length === 0) return false;
+  const tokenized = tokenizePathSafe(fieldPath);
+  if (!tokenized.ok) return false;
   let cur: any = root;
-  for (const k of tokens) {
+  for (const k of tokenized.tokens) {
     if (cur == null) return false;
-    if (!(typeof cur === "object" && (k as any) in cur)) return false;
+    if (typeof cur !== "object") return false;
+    if (typeof k === "number") {
+      if (!Array.isArray(cur) || k < 0 || k >= cur.length) return false;
+    } else if (!Object.prototype.hasOwnProperty.call(cur, k)) {
+      return false;
+    }
     cur = cur[k as any];
   }
   return true;
@@ -88,11 +119,17 @@ export function setField(
   newValue: any,
   options: { evidence?: any; spotFix?: any } = {}
 ): { ok: true; before: any } | { ok: false; reason: string } {
-  const tokens = tokenizePath(fieldPath);
-  if (tokens.length === 0) return { ok: false, reason: "empty field_path" };
-  const parent = getParent(root, tokens);
+  const tokenized = tokenizePathSafe(fieldPath);
+  if (!tokenized.ok) return { ok: false, reason: tokenized.reason };
+  const parent = getParent(root, tokenized.tokens);
   if (!parent) return { ok: false, reason: "parent path does not resolve" };
   const key = parent.key;
+  // getParent already rejects forbidden final keys, but check once more
+  // before the write — this is the single line that would otherwise be the
+  // prototype-pollution sink.
+  if (typeof key === "string" && FORBIDDEN_SEGMENTS.has(key)) {
+    return { ok: false, reason: `forbidden final segment: ${key}` };
+  }
   const cur = (parent.parent as any)[key as any];
   const before = cur === undefined ? null : JSON.parse(JSON.stringify(cur));
 
@@ -113,7 +150,16 @@ export function setField(
   // Otherwise the whole subtree is replaced. Spot-fix on a whole row is rare;
   // skill says "flag on a row means something in this row is wrong", but the
   // agent typically targets a sub-cell. Replace wholesale here.
-  (parent.parent as any)[key as any] = newValue;
+  //
+  // Use defineProperty rather than `[key] = ...` so even an unguarded key
+  // (which shouldn't reach here) cannot replace a prototype slot — an own,
+  // writable, enumerable data property always shadows any prototype key.
+  Object.defineProperty(parent.parent, key as PropertyKey, {
+    value: newValue,
+    writable: true,
+    enumerable: true,
+    configurable: true,
+  });
   return { ok: true, before };
 }
 

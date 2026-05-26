@@ -520,14 +520,26 @@ export async function approveCandidate(
 
   // Update product MD frontmatter sources: list
   const localForMd = relForMd(cand.scope, filename);
-  appendProductMdSource({
-    mdPath: ctx.product_md,
-    local: localForMd,
-    docType: cand.doc_type,
-    title: titleFromMaybe(cand),
-    url: cand.url,
-    pageCount: v.pageCount ?? null,
-  });
+  try {
+    appendProductMdSource({
+      mdPath: ctx.product_md,
+      local: localForMd,
+      docType: cand.doc_type,
+      title: titleFromMaybe(cand),
+      url: cand.url,
+      pageCount: v.pageCount ?? null,
+    });
+  } catch (err) {
+    return {
+      ok: false,
+      productSlug: cand.product_slug,
+      localPath,
+      sha256: v.sha256!,
+      pageCount: v.pageCount ?? 0,
+      fileSize: v.fileSize,
+      error: (err as Error).message,
+    };
+  }
 
   return {
     ok: true,
@@ -605,15 +617,20 @@ interface AppendMdSourceInput {
  *
  * Note: we re-write the frontmatter via js-yaml, then concatenate with the
  * original body. Atomic write: tmp + rename.
+ *
+ * @throws when the MD file is missing or lacks a valid `---` frontmatter block.
  */
-function appendProductMdSource(input: AppendMdSourceInput): void {
+export function appendProductMdSource(input: AppendMdSourceInput): void {
   if (!fs.existsSync(input.mdPath)) {
-    // Should not happen — discover/approve creates the skel, sources are added later.
-    return;
+    throw new Error(`Product MD not found: ${input.mdPath}`);
   }
   const raw = fs.readFileSync(input.mdPath, "utf8");
   const fmMatch = raw.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
-  if (!fmMatch) return;
+  if (!fmMatch) {
+    throw new Error(
+      `Product MD missing valid frontmatter block: ${input.mdPath}`
+    );
+  }
   const fm = (yaml.load(fmMatch[1]) as Record<string, any>) ?? {};
   const body = fmMatch[2] ?? "";
   const sources: any[] = Array.isArray(fm.sources) ? fm.sources : [];
@@ -786,14 +803,26 @@ export async function manualUpload(
     },
   });
 
-  appendProductMdSource({
-    mdPath: ctx.product_md,
-    local: relForMd(scope, filename),
-    docType: input.docType,
-    title: input.title ?? null,
-    url: input.url ?? "",
-    pageCount: pageCount ?? null,
-  });
+  try {
+    appendProductMdSource({
+      mdPath: ctx.product_md,
+      local: relForMd(scope, filename),
+      docType: input.docType,
+      title: input.title ?? null,
+      url: input.url ?? "",
+      pageCount: pageCount ?? null,
+    });
+  } catch (err) {
+    return {
+      ok: false,
+      productSlug: input.productSlug,
+      localPath,
+      sha256,
+      pageCount: pageCount ?? 0,
+      fileSize: buf.byteLength,
+      error: (err as Error).message,
+    };
+  }
 
   return {
     ok: true,

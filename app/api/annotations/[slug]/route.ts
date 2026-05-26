@@ -7,6 +7,7 @@ import {
   type AnnotationStatus,
   type AnnotationType
 } from "@/lib/annotations";
+import { isFieldPathSafe } from "@/lib/safe-path";
 
 export const dynamic = "force-dynamic";
 
@@ -35,6 +36,16 @@ export async function POST(
 
   if (!field_path) {
     return NextResponse.json({ error: "field_path required" }, { status: 400 });
+  }
+  // field_path is later fed to lib/pipeline/extraction-paths.ts:setField, which
+  // walks the extraction.json object graph and writes at the final segment.
+  // Reject paths whose shape would land a write on Object.prototype — see
+  // lib/safe-path.ts and the spot-fix accept flow.
+  if (!isFieldPathSafe(field_path)) {
+    return NextResponse.json(
+      { error: "field_path malformed or contains forbidden segment" },
+      { status: 400 }
+    );
   }
   if (type !== "flag" && type !== "note") {
     return NextResponse.json({ error: "type must be 'flag' or 'note'" }, { status: 400 });

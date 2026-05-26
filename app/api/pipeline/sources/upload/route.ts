@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { manualUpload } from "@/lib/pipeline/sources";
+import { isSupportedDocType, manualUpload } from "@/lib/pipeline/sources";
 
 export const dynamic = "force-dynamic";
 export const maxDuration = 120;
@@ -23,6 +23,12 @@ export async function POST(req: NextRequest) {
   if (!productSlug || !docType) {
     return NextResponse.json(
       { error: "productSlug and docType required" },
+      { status: 400 }
+    );
+  }
+  if (!isSupportedDocType(docType)) {
+    return NextResponse.json(
+      { error: `unsupported docType: ${docType}` },
       { status: 400 }
     );
   }

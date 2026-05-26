@@ -23,6 +23,11 @@
  *   it (with the viewer URL as Referer to satisfy Sec-Fetch-Site: same-origin).
  */
 import crypto from "node:crypto";
+import { boundedFetch, type BoundedFetchOptions } from "@/lib/safe-url";
+
+/** Max PDF body — 100 MiB. Anything larger is almost certainly not a real
+ *  data-sheet and risks OOM'ing the worker if streamed into memory. */
+const MAX_PDF_BYTES = 100 * 1024 * 1024;
 
 export interface PdfValidationResult {
   ok: boolean;
@@ -144,33 +149,33 @@ async function rawFetch(
   url: string,
   options: { timeoutMs?: number; ua?: string; referer?: string } = {}
 ): Promise<RawFetchResult> {
-  const timeoutMs = options.timeoutMs ?? 120_000;
-  const controller = new AbortController();
-  const timer = setTimeout(() => controller.abort(), timeoutMs);
-
-  try {
-    const res = await fetch(url, {
-      headers: buildBrowserHeaders(url, options),
-      redirect: "follow",
-      signal: controller.signal,
-    });
-    clearTimeout(timer);
-    const buf = Buffer.from(await res.arrayBuffer());
-    return {
-      ok: res.ok,
-      status: res.status,
-      buf,
-      contentType: res.headers.get("content-type") ?? undefined,
-    };
-  } catch (err: any) {
-    clearTimeout(timer);
+  // boundedFetch runs validateUrlAsync (scheme + DNS + IP deny-list) before
+  // sending the request, streams the body with a hard size cap, and
+  // re-validates the final URL after any redirects. The URL we receive here
+  // can ultimately come from LLM output (lib/pipeline/sources.ts), so the
+  // validation is load-bearing — without it, a poisoned web-search result
+  // can drive this fetch into AWS IMDS / internal subnets.
+  const result = await boundedFetch(url, {
+    headers: buildBrowserHeaders(url, options),
+    redirect: "follow",
+    timeoutMs: options.timeoutMs ?? 120_000,
+    maxBytes: MAX_PDF_BYTES,
+  } as BoundedFetchOptions);
+  if (result.error) {
     return {
       ok: false,
-      status: 0,
-      buf: Buffer.alloc(0),
-      error: `fetch failed: ${err?.message ?? String(err)}`,
+      status: result.status,
+      buf: result.buf,
+      contentType: result.contentType,
+      error: `fetch failed: ${result.error}`,
     };
   }
+  return {
+    ok: result.ok,
+    status: result.status,
+    buf: result.buf,
+    contentType: result.contentType,
+  };
 }
 
 function looksLikePdf(buf: Buffer): boolean {

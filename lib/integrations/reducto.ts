@@ -20,8 +20,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { env } from "@/lib/env";
+import { boundedFetch } from "@/lib/safe-url";
 
 export const REDUCTO_API_BASE = "https://platform.reducto.ai";
+
+/** Hard cap for an individual Reducto-supplied artifact (presigned result JSON
+ *  or a single image crop). Image crops are recompressed to 1600px JPEG q85 in
+ *  downloadImage, so realistic sizes are <2 MiB; 50 MiB is the conservative
+ *  ceiling that still rejects accidental or malicious gigabyte responses. */
+const MAX_REDUCTO_ARTIFACT_BYTES = 50 * 1024 * 1024;
 
 export interface ReductoBlockBbox {
   page?: number;
@@ -209,13 +216,26 @@ export async function fetchJobResult(
     if (!inner.url) {
       throw new Error("Reducto returned no chunks and no result URL");
     }
-    const r = await fetch(inner.url);
-    if (!r.ok) {
+    // inner.url is a presigned URL Reducto returns for large results. It's
+    // upstream-controlled (compromised Reducto account / response-spoofing
+    // angle), so we run it through boundedFetch — same URL deny-list and
+    // size cap as the source-acquisition path.
+    const r = await boundedFetch(inner.url, {
+      maxBytes: MAX_REDUCTO_ARTIFACT_BYTES,
+    });
+    if (!r.ok || r.error) {
       throw new Error(
-        `Reducto presigned-result fetch failed (${r.status}): ${await safeText(r)}`
+        `Reducto presigned-result fetch failed (${r.status}): ${r.error ?? r.buf.toString("utf8").slice(0, 1000)}`
       );
     }
-    const body = (await r.json()) as { chunks?: ReductoChunk[] };
+    let body: { chunks?: ReductoChunk[] };
+    try {
+      body = JSON.parse(r.buf.toString("utf8")) as { chunks?: ReductoChunk[] };
+    } catch (err) {
+      throw new Error(
+        `Reducto presigned-result parse failed: ${(err as Error).message}`
+      );
+    }
     chunks = body.chunks ?? [];
   }
   return {
@@ -263,20 +283,29 @@ export async function downloadImage(
   destPath: string
 ): Promise<DownloadImageResult> {
   try {
-    const r = await fetch(url);
-    if (!r.ok) {
-      return { status: "failed", bytes: 0, error: `HTTP ${r.status}` };
+    // url comes from Reducto's parse-result block.image_url — upstream-
+    // controlled. Same boundedFetch contract as fetchJobResult: scheme + IP
+    // deny-list + size cap. An unbounded fetch would let a malicious or
+    // accidentally-huge image crop OOM the worker.
+    const r = await boundedFetch(url, {
+      maxBytes: MAX_REDUCTO_ARTIFACT_BYTES,
+    });
+    if (!r.ok || r.error) {
+      return {
+        status: "failed",
+        bytes: 0,
+        error: r.error ?? `HTTP ${r.status}`,
+      };
     }
-    const ab = await r.arrayBuffer();
-    if (ab.byteLength < 100) {
-      return { status: "failed", bytes: ab.byteLength, error: "too small" };
+    if (r.buf.byteLength < 100) {
+      return { status: "failed", bytes: r.buf.byteLength, error: "too small" };
     }
 
     // sharp is a heavy native dep; lazy-require so module load doesn't break
     // in non-image dev paths.
     // eslint-disable-next-line @typescript-eslint/no-var-requires
     const sharp = require("sharp") as (b: Buffer) => any;
-    const image = sharp(Buffer.from(ab));
+    const image = sharp(r.buf);
     const meta = await image.metadata();
     const width = meta.width ?? 0;
     const height = meta.height ?? 0;

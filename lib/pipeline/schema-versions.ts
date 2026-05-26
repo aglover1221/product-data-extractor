@@ -10,10 +10,12 @@
  * to import every on-disk schema MD as the initial v-row keyed by frontmatter version.
  */
 import { ensureStudioSchema, getStudioDb } from "@/lib/db/client";
+import fs from "node:fs";
 import {
   listSchemaFiles,
   readSchemaContent,
   frontmatterVersion,
+  writeSchemaContentAtomic,
   type SchemaFsRecord,
 } from "@/lib/pipeline/schemas-fs";
 import { parseMarkdown } from "@/lib/safe-matter";
@@ -217,4 +219,23 @@ export function insertVersion(p: InsertVersionParams): { id: number; version: st
       nowIso(),
     );
   return { id: Number(result.lastInsertRowid), version: p.version };
+}
+
+/**
+ * Writes canonical schema content to disk and records the version row. If the
+ * DB insert fails after the filesystem write, restores the previous on-disk
+ * content so fs and DB stay aligned.
+ */
+export function saveSchemaVersionAtomic(
+  rec: SchemaFsRecord,
+  p: InsertVersionParams
+): { id: number; version: string } {
+  const previous = fs.readFileSync(rec.abs_path, "utf8");
+  writeSchemaContentAtomic(rec, p.content_md);
+  try {
+    return insertVersion(p);
+  } catch (err) {
+    writeSchemaContentAtomic(rec, previous);
+    throw err;
+  }
 }

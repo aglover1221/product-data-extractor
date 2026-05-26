@@ -13,14 +13,13 @@
 import { NextResponse } from "next/server";
 import {
   findSchemaFile,
-  writeSchemaContentAtomic,
   type SchemaFsRecord,
 } from "@/lib/pipeline/schemas-fs";
 import { validateAll } from "@/lib/pipeline/schema-validators";
 import {
   getVersionByVersion,
-  insertVersion,
   nextVersion,
+  saveSchemaVersionAtomic,
   seedFromFilesystemIfEmpty,
 } from "@/lib/pipeline/schema-versions";
 
@@ -72,21 +71,18 @@ export async function POST(req: Request) {
   const newVersion = nextVersion(name, content_md);
 
   try {
-    writeSchemaContentAtomic(rec, content_md);
+    const { id, version } = saveSchemaVersionAtomic(rec, {
+      name,
+      version: newVersion,
+      content_md,
+      parent_version_id,
+      status: "active",
+    });
+    return NextResponse.json({ id, version });
   } catch (e: any) {
     return NextResponse.json(
-      { error: `Filesystem write failed: ${e?.message ?? e}` },
+      { error: `Schema save failed: ${e?.message ?? e}` },
       { status: 500 },
     );
   }
-
-  const { id, version } = insertVersion({
-    name,
-    version: newVersion,
-    content_md,
-    parent_version_id,
-    status: "active",
-  });
-
-  return NextResponse.json({ id, version });
 }

@@ -393,8 +393,35 @@ const STABLE_FILENAMES: Record<string, string> = {
   other: "other.pdf",
 };
 
-function stableFilenameFor(docType: string): string {
-  return STABLE_FILENAMES[docType] ?? `${docType}.pdf`;
+const SAFE_SOURCE_FILENAME = /^[a-z0-9][a-z0-9._-]*\.pdf$/i;
+
+export function isSupportedDocType(docType: string): boolean {
+  return Object.prototype.hasOwnProperty.call(STABLE_FILENAMES, docType);
+}
+
+export function stableFilenameFor(docType: string): string {
+  const filename = STABLE_FILENAMES[docType];
+  if (!filename) {
+    throw new Error(`unsupported docType: ${docType}`);
+  }
+  return filename;
+}
+
+export function resolveSafeSourceTarget(sourceDir: string, filename: string): string {
+  const trimmed = filename.trim();
+  if (!SAFE_SOURCE_FILENAME.test(trimmed)) {
+    throw new Error(`invalid source filename: ${filename}`);
+  }
+  if (path.basename(trimmed) !== trimmed) {
+    throw new Error(`invalid source filename: ${filename}`);
+  }
+
+  const absSourceDir = path.resolve(sourceDir);
+  const targetAbs = path.resolve(absSourceDir, trimmed);
+  if (!targetAbs.startsWith(absSourceDir + path.sep)) {
+    throw new Error(`source target escapes source dir: ${filename}`);
+  }
+  return targetAbs;
 }
 
 export async function approveCandidate(
@@ -450,7 +477,7 @@ export async function approveCandidate(
   const filename = stableFilenameFor(cand.doc_type);
   const sourceDir = path.join(ctx.product_dir, "source");
   fs.mkdirSync(sourceDir, { recursive: true });
-  const targetAbs = path.join(sourceDir, filename);
+  const targetAbs = resolveSafeSourceTarget(sourceDir, filename);
   const tmp = `${targetAbs}.tmp-${process.pid}-${Date.now()}`;
   fs.writeFileSync(tmp, v.bytes);
   fs.renameSync(tmp, targetAbs);
@@ -728,10 +755,10 @@ export async function manualUpload(
   }
 
   const scope = input.scope ?? "own";
-  const filename = input.filename ?? stableFilenameFor(input.docType);
+  const filename = input.filename?.trim() || stableFilenameFor(input.docType);
   const sourceDir = path.join(ctx.product_dir, "source");
   fs.mkdirSync(sourceDir, { recursive: true });
-  const targetAbs = path.join(sourceDir, filename);
+  const targetAbs = resolveSafeSourceTarget(sourceDir, filename);
   const tmp = `${targetAbs}.tmp-${process.pid}-${Date.now()}`;
   fs.writeFileSync(tmp, buf);
   fs.renameSync(tmp, targetAbs);

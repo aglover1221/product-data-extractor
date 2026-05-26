@@ -22,6 +22,7 @@ import {
   buildExtractionPrompt,
   submitOneSync,
   submitBatchForCategory,
+  batchCustomId,
   parseExtractionJson,
   writeExtractionJson,
 } from "@/lib/pipeline/extract";
@@ -160,7 +161,7 @@ async function main() {
   const runId = Number(runInfo.lastInsertRowid);
   db.prepare(
     `INSERT INTO extraction_results (run_id, product_slug, status, started_at) VALUES (?, ?, 'queued', ?)`
-  ).run(runId, ctx.slug, submittedAt);
+  ).run(runId, batchCustomId(ctx), submittedAt);
 
   const payload: AnthropicBatchPayload = { runId, batchId };
   const jobId = enqueueJob("anthropic-batch-poll", payload, {

@@ -13,6 +13,10 @@ import ReExtractButton from "@/app/_components/ReExtractButton";
 
 export const dynamic = "force-dynamic";
 
+function productPageSlug(stored: string): string {
+  return stored.includes("/") ? stored.split("/").pop()! : stored;
+}
+
 function fmtUsd(n: number | null | undefined): string {
   if (n == null || !Number.isFinite(n)) return "—";
   if (n >= 10) return `$${n.toFixed(2)}`;
@@ -132,7 +136,7 @@ export default function RunDetailPage({
                   <tr key={r.id} className="hover:bg-white/[0.04]">
                     <td className="font-medium">
                       {r.status === "completed" ? (
-                        <Link href={`/products/${r.product_slug}`}>
+                        <Link href={`/products/${productPageSlug(r.product_slug)}`}>
                           {r.product_slug}
                         </Link>
                       ) : (

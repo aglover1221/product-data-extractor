@@ -28,6 +28,7 @@ import { ensureStudioSchema } from "@/lib/db/client";
 import {
   loadProductContext,
   submitBatchForCategory,
+  batchCustomId,
 } from "@/lib/pipeline/extract";
 import { estimateBatchCost } from "@/lib/pipeline/cost-estimate";
 import {
@@ -193,8 +194,8 @@ export async function POST(req: NextRequest) {
     costEstimateUsd: estimate.totalUsd,
     requestCount,
   });
-  for (const slug of productSlugs) {
-    insertResult(runId, slug, "queued");
+  for (const ctx of contexts) {
+    insertResult(runId, batchCustomId(ctx), "queued");
   }
 
   const payload: AnthropicBatchPayload = { runId, batchId };

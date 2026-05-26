@@ -19,6 +19,7 @@ import {
 import {
   parseExtractionJson,
   writeExtractionJson,
+  resolveBatchProductDir,
 } from "@/lib/pipeline/extract";
 
 export interface AnthropicBatchPayload {
@@ -53,18 +54,18 @@ export async function handleAnthropicBatchPoll(
   let totalCostUsd = 0;
 
   for await (const entry of streamBatchResults(batchId)) {
-    const productSlug = entry.custom_id;
+    const batchCustomId = entry.custom_id;
     const resultRow = db
       .prepare(
         `SELECT id, output_path FROM extraction_results WHERE run_id = ? AND product_slug = ?`
       )
-      .get(runId, productSlug) as
+      .get(runId, batchCustomId) as
       | { id: number; output_path: string | null }
       | undefined;
 
     if (!resultRow) {
       console.warn(
-        `[batch-poll] no extraction_results row for run=${runId} slug=${productSlug}; skipping`
+        `[batch-poll] no extraction_results row for run=${runId} custom_id=${batchCustomId}; skipping`
       );
       continue;
     }
@@ -81,10 +82,7 @@ export async function handleAnthropicBatchPoll(
       }
       try {
         const parsed = parseExtractionJson(textBlock.text);
-        const productDir = path.resolve(
-          env.PRODUCT_MCP_DATA_DIR,
-          productSlug
-        );
+        const productDir = resolveBatchProductDir(batchCustomId);
         const outPath = writeExtractionJson(productDir, parsed);
         const usage = message.usage;
         const cost = calcCost({

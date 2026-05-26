@@ -30,6 +30,7 @@ import {
 } from "@/lib/integrations/anthropic";
 import { readProductMdManifest, type ManifestSource } from "@/lib/sources";
 import { parseMarkdown } from "@/lib/safe-matter";
+import { invalidateExtractionCache } from "@/lib/extractions";
 
 const DATA_DIR = env.PRODUCT_MCP_DATA_DIR;
 const SCHEMAS_DIR = path.join(DATA_DIR, "schemas");
@@ -189,11 +190,31 @@ export function loadSystemPrompt(): string {
 
 export interface ProductContext {
   slug: string;
+  /** Relative to PRODUCT_MCP_DATA_DIR, e.g. server/dell/poweredge/r770 */
+  productPathRel: string;
   productDir: string;
   productMdPath: string;
   frontmatter: Record<string, any>;
   manifest: ManifestSource[];
   categoryKey: string;
+}
+
+/** Anthropic Batch custom_id — full nested path, not bare slug. */
+export function batchCustomId(ctx: ProductContext): string {
+  return ctx.productPathRel;
+}
+
+/** Resolve a batch custom_id back to the absolute product directory. */
+export function resolveBatchProductDir(customId: string): string {
+  const root = path.resolve(DATA_DIR);
+  const productDir = path.resolve(root, customId);
+  const rel = path.relative(root, productDir);
+  if (rel.startsWith("..") || path.isAbsolute(rel)) {
+    throw new Error(
+      `batch custom_id escapes PRODUCT_MCP_DATA_DIR: ${customId}`
+    );
+  }
+  return productDir;
 }
 
 /**
@@ -219,7 +240,15 @@ export function loadProductContext(productPathRel: string): ProductContext {
     throw new Error(`Product MD manifest is empty: ${productMdPath}`);
   }
   const categoryKey = resolveCategoryKey(frontmatter);
-  return { slug, productDir, productMdPath, frontmatter, manifest, categoryKey };
+  return {
+    slug,
+    productPathRel,
+    productDir,
+    productMdPath,
+    frontmatter,
+    manifest,
+    categoryKey,
+  };
 }
 
 // ----------------------------------------------------------------------------
@@ -394,7 +423,7 @@ export async function submitBatchForCategory(
   const perProductEstimate: number[] = [];
   for (const ctx of contexts) {
     const built = buildExtractionPrompt(ctx, options);
-    requests.push({ custom_id: ctx.slug, params: built.params });
+    requests.push({ custom_id: batchCustomId(ctx), params: built.params });
     perProductEstimate.push(built.estimate.totalInputTokens);
   }
   const result = await submitBatch(requests);
@@ -428,5 +457,6 @@ export function writeExtractionJson(
 ): string {
   const out = path.join(productDir, "extraction.json");
   fs.writeFileSync(out, JSON.stringify(parsed, null, 2) + "\n", "utf8");
+  invalidateExtractionCache();
   return out;
 }

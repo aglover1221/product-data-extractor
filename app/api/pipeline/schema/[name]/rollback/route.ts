@@ -10,13 +10,12 @@
 import { NextResponse } from "next/server";
 import {
   findSchemaFile,
-  writeSchemaContentAtomic,
 } from "@/lib/pipeline/schemas-fs";
 import { validateAll } from "@/lib/pipeline/schema-validators";
 import {
   getVersionByVersion,
-  insertVersion,
   nextVersion,
+  saveSchemaVersionAtomic,
   seedFromFilesystemIfEmpty,
 } from "@/lib/pipeline/schema-versions";
 
@@ -62,21 +61,18 @@ export async function POST(req: Request, ctx: { params: { name: string } }) {
   const newVersion = nextVersion(name, old.content_md);
 
   try {
-    writeSchemaContentAtomic(rec, old.content_md);
+    const { id, version } = saveSchemaVersionAtomic(rec, {
+      name,
+      version: newVersion,
+      content_md: old.content_md,
+      parent_version_id: old.id,
+      status: "active",
+    });
+    return NextResponse.json({ id, version, rolled_back_from: old.version });
   } catch (e: any) {
     return NextResponse.json(
-      { error: `Filesystem write failed: ${e?.message ?? e}` },
+      { error: `Schema rollback failed: ${e?.message ?? e}` },
       { status: 500 },
     );
   }
-
-  const { id, version } = insertVersion({
-    name,
-    version: newVersion,
-    content_md: old.content_md,
-    parent_version_id: old.id,
-    status: "active",
-  });
-
-  return NextResponse.json({ id, version, rolled_back_from: old.version });
 }

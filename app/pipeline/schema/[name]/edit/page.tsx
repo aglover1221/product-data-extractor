@@ -7,6 +7,7 @@
  */
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import "../../md-preview.css";
 import {
   findSchemaFile,
   readSchemaContent,

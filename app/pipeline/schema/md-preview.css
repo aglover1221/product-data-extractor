@@ -1,0 +1,18 @@
+/* Markdown preview styles for schema editor + detail pages. */
+.md-preview h1 { font-size: 18px; font-weight: 600; margin: 12px 0 6px; color: #fff; }
+.md-preview h2 { font-size: 15px; font-weight: 600; margin: 10px 0 5px; color: #fff; }
+.md-preview h3 { font-size: 13px; font-weight: 600; margin: 8px 0 4px; color: rgba(255,255,255,0.9); }
+.md-preview p { margin: 6px 0; }
+.md-preview ul, .md-preview ol { margin: 6px 0 6px 18px; }
+.md-preview ul { list-style: disc; }
+.md-preview ol { list-style: decimal; }
+.md-preview li { margin: 2px 0; }
+.md-preview code { background: rgba(255,255,255,0.06); padding: 0 4px; border-radius: 3px; font-size: 11px; font-family: ui-monospace, SFMono-Regular, Menlo, monospace; }
+.md-preview pre { background: rgba(0,0,0,0.4); padding: 8px; border-radius: 4px; overflow: auto; font-size: 11px; }
+.md-preview pre code { background: transparent; padding: 0; }
+.md-preview table { border-collapse: collapse; margin: 8px 0; font-size: 12px; }
+.md-preview th, .md-preview td { border: 1px solid rgba(255,255,255,0.1); padding: 4px 8px; text-align: left; vertical-align: top; }
+.md-preview th { background: rgba(255,255,255,0.04); font-weight: 500; }
+.md-preview blockquote { border-left: 2px solid rgba(255,255,255,0.2); padding-left: 8px; color: rgba(255,255,255,0.7); margin: 6px 0; }
+.md-preview a { color: #93c5fd; }
+.md-preview hr { border: 0; border-top: 1px solid rgba(255,255,255,0.1); margin: 10px 0; }

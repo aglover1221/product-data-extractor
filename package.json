@@ -4,10 +4,10 @@
   "description": "Studio for product data extraction — viewer, schema-walked LLM extraction (Anthropic Batch), PDF parsing (Reducto), and pipeline orchestration. Reads a configurable data root.",
   "license": "MIT",
   "scripts": {
-    "dev": "next dev -p 3210",
-    "dev:wsl": "next dev -p 3210 -H 0.0.0.0",
+    "dev": "node scripts/generate-inline-styles.mjs && next dev -p 3210",
+    "dev:wsl": "node scripts/generate-inline-styles.mjs && next dev -p 3210 -H 0.0.0.0",
     "dev:all": "concurrently -n web,worker -c blue,green \"npm run dev\" \"npm run worker\"",
-    "build": "next build",
+    "build": "node scripts/generate-inline-styles.mjs && next build",
     "start": "next start -p 3210",
     "worker": "tsx worker/index.ts",
     "studio:init": "tsx scripts/init-studio-db.ts",

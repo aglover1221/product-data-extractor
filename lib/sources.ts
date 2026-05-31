@@ -5,6 +5,10 @@ import { REPO_ROOT, walkDirs, parseProductRelDir } from "./repo-walk";
 import { parseMarkdown } from "./safe-matter";
 
 export type SourceScope = "product" | "line" | "category";
+export type NormalizedManifestPath = {
+  normalized: string;
+  scope: SourceScope;
+};
 
 export type ManifestSource = {
   scope: SourceScope;
@@ -23,19 +27,46 @@ export type ManifestSource = {
   resolved_extraction_path?: string;
 };
 
-/** Classify a manifest `local:` value by counting leading `../` segments. */
+/** Classify a manifest `local:` value by normalized leading `../` segments. */
 export function classifyScope(localPath: string): SourceScope {
-  const p = localPath.trim();
-  if (p.startsWith("../../")) return "category";
-  if (p.startsWith("../")) return "line";
-  return "product";
+  const normalized = normalizeManifestLocalPath(localPath);
+  return normalized?.scope ?? "product";
+}
+
+/**
+ * Normalize and validate frontmatter local paths.
+ * Returns null for unsafe/invalid forms.
+ */
+export function normalizeManifestLocalPath(localPath: string): NormalizedManifestPath | null {
+  let p = String(localPath ?? "").trim();
+  if (!p) return null;
+
+  p = p.replaceAll("\\", "/").replace(/\/{2,}/g, "/");
+  while (p.startsWith("./")) p = p.slice(2);
+  p = p.replace(/^\/+|\/+$/g, "");
+  if (!p || path.posix.isAbsolute(p) || p.includes("\u0000")) return null;
+
+  const segments = p.split("/");
+  let leadingParentRefs = 0;
+  while (segments[leadingParentRefs] === "..") leadingParentRefs += 1;
+  if (leadingParentRefs > 2) return null;
+  for (let i = leadingParentRefs; i < segments.length; i += 1) {
+    if (!segments[i] || segments[i] === "." || segments[i] === "..") return null;
+  }
+
+  const normalized = segments.join("/");
+  if (leadingParentRefs === 2) return { normalized, scope: "category" };
+  if (leadingParentRefs === 1) return { normalized, scope: "line" };
+  return { normalized, scope: "product" };
 }
 
 /** Resolve a manifest path against the MD's directory; returns null if it escapes REPO_ROOT. */
 export function resolveManifestPath(mdDir: string, localPath: string): string | null {
-  if (!localPath) return null;
-  const abs = path.resolve(mdDir, localPath);
-  if (!abs.startsWith(REPO_ROOT)) return null;
+  const normalized = normalizeManifestLocalPath(localPath);
+  if (!normalized) return null;
+  const abs = path.resolve(mdDir, normalized.normalized);
+  const relToRepo = path.relative(REPO_ROOT, abs);
+  if (relToRepo.startsWith("..") || path.isAbsolute(relToRepo)) return null;
   return fs.existsSync(abs) ? abs : null;
 }
 
@@ -51,28 +82,34 @@ export function readProductMdManifest(productDir: string, slug: string): Manifes
   }
   const { data } = parseMarkdown(raw);
   const rows = Array.isArray(data.sources) ? data.sources : [];
-  return rows.map((r: any) => {
-    const local = String(r.local ?? "");
-    const localExtraction = r.local_extraction ? String(r.local_extraction) : undefined;
-    return {
-      scope: classifyScope(local),
-      local,
-      local_extraction: localExtraction,
-      type: String(r.type ?? "other"),
-      title: r.title,
-      url: r.url,
-      revision: r.revision,
-      date: r.date,
-      pages: typeof r.pages === "number" ? r.pages : undefined,
-      audit_status: r.audit_status,
-      audit_date: r.audit_date,
-      notes: r.notes,
-      resolved_path: resolveManifestPath(productDir, local) ?? undefined,
-      resolved_extraction_path: localExtraction
-        ? resolveManifestPath(productDir, localExtraction) ?? undefined
-        : undefined
-    } satisfies ManifestSource;
-  });
+  return rows
+    .map((r: any) => {
+      const normalizedLocal = normalizeManifestLocalPath(String(r.local ?? ""));
+      if (!normalizedLocal) return null;
+      const normalizedExtraction = r.local_extraction
+        ? normalizeManifestLocalPath(String(r.local_extraction))
+        : null;
+
+      return {
+        scope: normalizedLocal.scope,
+        local: normalizedLocal.normalized,
+        local_extraction: normalizedExtraction?.normalized,
+        type: String(r.type ?? "other"),
+        title: r.title,
+        url: r.url,
+        revision: r.revision,
+        date: r.date,
+        pages: typeof r.pages === "number" ? r.pages : undefined,
+        audit_status: r.audit_status,
+        audit_date: r.audit_date,
+        notes: r.notes,
+        resolved_path: resolveManifestPath(productDir, normalizedLocal.normalized) ?? undefined,
+        resolved_extraction_path: normalizedExtraction
+          ? resolveManifestPath(productDir, normalizedExtraction.normalized) ?? undefined
+          : undefined
+      } satisfies ManifestSource;
+    })
+    .filter((row): row is ManifestSource => row !== null);
 }
 
 export type SourceFailure = {

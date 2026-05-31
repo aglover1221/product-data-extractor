@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyScope, formatBytes } from "@/lib/sources";
+import { classifyScope, formatBytes, normalizeManifestLocalPath } from "@/lib/sources";
 
 describe("classifyScope (manifest local: → scope)", () => {
   it("classifies bare or source-prefixed paths as product scope", () => {
@@ -17,6 +17,26 @@ describe("classifyScope (manifest local: → scope)", () => {
 
   it("tolerates leading whitespace", () => {
     expect(classifyScope("   ../source/foo.pdf")).toBe("line");
+  });
+});
+
+describe("normalizeManifestLocalPath", () => {
+  it("normalizes whitespace, ./ prefixes, and separators", () => {
+    expect(normalizeManifestLocalPath("  ./source\\\\spec-sheet.pdf ")).toEqual({
+      normalized: "source/spec-sheet.pdf",
+      scope: "product",
+    });
+  });
+
+  it("derives scope from leading parent refs", () => {
+    expect(normalizeManifestLocalPath("../source/guide.pdf")?.scope).toBe("line");
+    expect(normalizeManifestLocalPath("../../source/guide.pdf")?.scope).toBe("category");
+  });
+
+  it("rejects unsafe traversal patterns", () => {
+    expect(normalizeManifestLocalPath("../../../etc/passwd")).toBeNull();
+    expect(normalizeManifestLocalPath("source/../../passwd")).toBeNull();
+    expect(normalizeManifestLocalPath("/absolute/path.pdf")).toBeNull();
   });
 });
 

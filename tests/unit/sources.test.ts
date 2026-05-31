@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyScope, formatBytes } from "@/lib/sources";
+import { classifyScope, formatBytes, normalizeSourceType } from "@/lib/sources";
 
 describe("classifyScope (manifest local: → scope)", () => {
   it("classifies bare or source-prefixed paths as product scope", () => {
@@ -43,5 +43,29 @@ describe("formatBytes", () => {
   it("crosses to GB at 1024 ** 3 with two decimals", () => {
     expect(formatBytes(1024 ** 3)).toBe("1.00 GB");
     expect(formatBytes(3.25 * 1024 ** 3)).toBe("3.25 GB");
+  });
+});
+
+describe("normalizeSourceType", () => {
+  it("maps technical guide aliases to tech-guide", () => {
+    expect(normalizeSourceType("technical-guide")).toBe("tech-guide");
+    expect(normalizeSourceType("product-guide")).toBe("tech-guide");
+    expect(normalizeSourceType("tech-guide")).toBe("tech-guide");
+  });
+
+  it("maps spec sheet aliases to spec-sheet", () => {
+    expect(normalizeSourceType("spec-sheet")).toBe("spec-sheet");
+    expect(normalizeSourceType("quickspecs")).toBe("spec-sheet");
+    expect(normalizeSourceType("quick-specs")).toBe("spec-sheet");
+  });
+
+  it("normalizes case and whitespace", () => {
+    expect(normalizeSourceType("  TECHNICAL-GUIDE  ")).toBe("tech-guide");
+    expect(normalizeSourceType("  Spec-Sheet ")).toBe("spec-sheet");
+  });
+
+  it("keeps unknown types as normalized lowercase values", () => {
+    expect(normalizeSourceType("Platform-Intro")).toBe("platform-intro");
+    expect(normalizeSourceType("custom-type")).toBe("custom-type");
   });
 });

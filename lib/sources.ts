@@ -23,6 +23,14 @@ export type ManifestSource = {
   resolved_extraction_path?: string;
 };
 
+/** Normalize source type aliases so scoring/rules use canonical logical types. */
+export function normalizeSourceType(type: string): string {
+  const normalized = String(type || "other").trim().toLowerCase();
+  if (["technical-guide", "tech-guide", "product-guide"].includes(normalized)) return "tech-guide";
+  if (["quickspecs", "quick-specs", "spec-sheet"].includes(normalized)) return "spec-sheet";
+  return normalized || "other";
+}
+
 /** Classify a manifest `local:` value by counting leading `../` segments. */
 export function classifyScope(localPath: string): SourceScope {
   const p = localPath.trim();
@@ -58,7 +66,7 @@ export function readProductMdManifest(productDir: string, slug: string): Manifes
       scope: classifyScope(local),
       local,
       local_extraction: localExtraction,
-      type: String(r.type ?? "other"),
+      type: normalizeSourceType(String(r.type ?? "other")),
       title: r.title,
       url: r.url,
       revision: r.revision,
@@ -174,7 +182,12 @@ export function readSourcesManifest(productDir: string): SourcesManifest | null 
     const raw = fs.readFileSync(fp, "utf8");
     const parsed = coerceDates(yaml.load(raw)) as any;
     if (!parsed) return null;
-    const sources = Array.isArray(parsed.sources) ? parsed.sources : [];
+    const sources = Array.isArray(parsed.sources)
+      ? parsed.sources.map((source: any) => ({
+          ...source,
+          type: normalizeSourceType(String(source?.type ?? "other"))
+        }))
+      : [];
     const failures = Array.isArray(parsed.failures) ? parsed.failures : undefined;
     return {
       product: parsed.product,
@@ -227,13 +240,14 @@ function summarize(absDir: string, relDir: string): SourcesSummary | null {
   // Fall back to sources.yaml types, then to filename inference for legacy dirs.
   const declaredTypes = new Set<string>(
     mdManifest
-      ? mdManifest.map((s) => s.type)
+      ? mdManifest.map((s) => normalizeSourceType(s.type))
       : manifest
-        ? (manifest.sources ?? []).map((s) => s.type)
+        ? (manifest.sources ?? []).map((s) => normalizeSourceType(s.type))
         : sourceFiles
             .filter((f) => f.name.endsWith(".pdf"))
             .map((f) => inferTypeFromFilename(f.name))
             .filter((t): t is string => t !== null)
+            .map((t) => normalizeSourceType(t))
   );
   const present = required.filter((t) => declaredTypes.has(t));
   const missing = required.filter((t) => !declaredTypes.has(t));

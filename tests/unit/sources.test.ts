@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest";
-import { classifyScope, formatBytes } from "@/lib/sources";
+import { classifyScope, collectDeclaredSourceTypes, formatBytes } from "@/lib/sources";
 
 describe("classifyScope (manifest local: → scope)", () => {
   it("classifies bare or source-prefixed paths as product scope", () => {
@@ -43,5 +43,48 @@ describe("formatBytes", () => {
   it("crosses to GB at 1024 ** 3 with two decimals", () => {
     expect(formatBytes(1024 ** 3)).toBe("1.00 GB");
     expect(formatBytes(3.25 * 1024 ** 3)).toBe("3.25 GB");
+  });
+});
+
+describe("collectDeclaredSourceTypes", () => {
+  it("prefers md manifest types when available", () => {
+    const result = collectDeclaredSourceTypes({
+      mdManifest: [
+        { scope: "product", local: "source/a.pdf", type: "spec-sheet" },
+        { scope: "line", local: "../source/b.pdf", type: "tech-guide" },
+      ],
+      manifest: {
+        sources: [{ filename: "x.pdf", type: "other" }],
+      },
+      sourceFiles: [{ name: "spec-sheet.pdf", size: 1, isText: false }],
+    });
+    expect(Array.from(result).sort()).toEqual(["spec-sheet", "tech-guide"]);
+  });
+
+  it("falls back to sources.yaml manifest when md manifest is absent", () => {
+    const result = collectDeclaredSourceTypes({
+      mdManifest: null,
+      manifest: {
+        sources: [
+          { filename: "a.pdf", type: "spec-sheet" },
+          { filename: "b.pdf", type: "tech-guide" },
+        ],
+      },
+      sourceFiles: [{ name: "quickspecs.pdf", size: 1, isText: false }],
+    });
+    expect(Array.from(result).sort()).toEqual(["spec-sheet", "tech-guide"]);
+  });
+
+  it("falls back to filename inference when no manifest data exists", () => {
+    const result = collectDeclaredSourceTypes({
+      mdManifest: null,
+      manifest: null,
+      sourceFiles: [
+        { name: "technical-guide.pdf", size: 1, isText: false },
+        { name: "quickspecs.pdf", size: 1, isText: false },
+        { name: "notes.txt", size: 1, isText: true },
+      ],
+    });
+    expect(Array.from(result).sort()).toEqual(["spec-sheet", "tech-guide"]);
   });
 });

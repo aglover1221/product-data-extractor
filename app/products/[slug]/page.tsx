@@ -14,7 +14,7 @@ import StorageView from "./_storage-view";
 import NetworkingView from "./_networking-view";
 import HciView from "./_hci-view";
 import { PipelineStrip, SourcesPanel, VerifyPanel } from "./_pipeline-strip";
-import ReExtractButton from "@/app/_components/ReExtractButton";
+import ReExtractButton from "./_re-extract-button";
 
 /** Allow bfcache + CDN caching; refresh when extraction/annotation data changes. */
 export const revalidate = 60;

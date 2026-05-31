@@ -1,7 +1,4 @@
-"use client";
-
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 
 const ITEMS: { href: string; label: string }[] = [
   { href: "/", label: "Portfolio" },
@@ -21,8 +18,7 @@ function isActive(pathname: string, href: string): boolean {
   return pathname === href || pathname.startsWith(href + "/");
 }
 
-export default function NavBar() {
-  const pathname = usePathname() || "/";
+export default function NavBar({ pathname }: { pathname: string }) {
   return (
     <nav className="flex items-center gap-1 text-sm">
       {ITEMS.map((it) => {

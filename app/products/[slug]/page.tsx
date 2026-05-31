@@ -1,6 +1,12 @@
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getExtraction, unwrap, type Extraction, type Evidence } from "@/lib/extractions";
+import {
+  getExtraction,
+  listExtractions,
+  unwrap,
+  type Extraction,
+  type Evidence
+} from "@/lib/extractions";
 import { readAnnotations, type Annotation } from "@/lib/annotations";
 import { getProductStageStatus } from "@/lib/stages";
 import AnnotationButton from "@/app/_components/AnnotationButton";
@@ -8,9 +14,14 @@ import StorageView from "./_storage-view";
 import NetworkingView from "./_networking-view";
 import HciView from "./_hci-view";
 import { PipelineStrip, SourcesPanel, VerifyPanel } from "./_pipeline-strip";
-import ReExtractButton from "@/app/_components/ReExtractButton";
+import ReExtractButton from "./_re-extract-button";
 
-export const dynamic = "force-dynamic";
+/** Allow bfcache + CDN caching; refresh when extraction/annotation data changes. */
+export const revalidate = 60;
+
+export function generateStaticParams() {
+  return listExtractions().map(({ slug }) => ({ slug }));
+}
 
 // ---------- helpers ----------
 

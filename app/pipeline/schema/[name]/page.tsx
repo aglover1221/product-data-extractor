@@ -8,6 +8,7 @@
  */
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import "../md-preview.css";
 import ReactMarkdown from "react-markdown";
 import remarkGfm from "remark-gfm";
 import {

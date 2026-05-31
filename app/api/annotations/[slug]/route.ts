@@ -1,3 +1,4 @@
+import { revalidatePath } from "next/cache";
 import { NextRequest, NextResponse } from "next/server";
 import {
   readAnnotations,
@@ -58,6 +59,7 @@ export async function POST(
     };
     file.annotations.push(ann);
     writeAnnotations(params.slug, file);
+    revalidatePath(`/products/${params.slug}`);
     return NextResponse.json(ann, { status: 201 });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message ?? "failed" }, { status: 500 });
@@ -101,6 +103,7 @@ export async function PATCH(
       }
     }
     writeAnnotations(params.slug, file);
+    revalidatePath(`/products/${params.slug}`);
     return NextResponse.json(ann);
   } catch (err: any) {
     return NextResponse.json({ error: err?.message ?? "failed" }, { status: 500 });
@@ -123,6 +126,7 @@ export async function DELETE(
       return NextResponse.json({ error: "not found" }, { status: 404 });
     }
     writeAnnotations(params.slug, file);
+    revalidatePath(`/products/${params.slug}`);
     return NextResponse.json({ ok: true });
   } catch (err: any) {
     return NextResponse.json({ error: err?.message ?? "failed" }, { status: 500 });

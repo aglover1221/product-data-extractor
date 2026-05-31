@@ -156,6 +156,33 @@ function inferTypeFromFilename(name: string): string | null {
   return null;
 }
 
+export type DeclaredSourceTypesInput = {
+  mdManifest: ManifestSource[] | null;
+  manifest: SourcesManifest | null;
+  sourceFiles: { name: string; size: number; isText: boolean }[];
+};
+
+/**
+ * Centralized source-type inventory with precedence:
+ * 1) product MD manifest
+ * 2) sources.yaml manifest
+ * 3) filename inference fallback
+ */
+export function collectDeclaredSourceTypes(input: DeclaredSourceTypesInput): Set<string> {
+  if (input.mdManifest) {
+    return new Set(input.mdManifest.map((s) => s.type).filter(Boolean));
+  }
+  if (input.manifest) {
+    return new Set((input.manifest.sources ?? []).map((s) => s.type).filter(Boolean));
+  }
+  return new Set(
+    input.sourceFiles
+      .filter((f) => f.name.endsWith(".pdf"))
+      .map((f) => inferTypeFromFilename(f.name))
+      .filter((t): t is string => t !== null)
+  );
+}
+
 function coerceDates(v: any): any {
   if (v instanceof Date) return v.toISOString();
   if (Array.isArray(v)) return v.map(coerceDates);
@@ -223,18 +250,11 @@ function summarize(absDir: string, relDir: string): SourcesSummary | null {
 
   const vendor = manifest?.product?.vendor ?? parsed.vendor;
   const { rule, required } = requiredTypesForVendor(vendor);
-  // The MD manifest is the canonical index per `_base.md`; prefer its declared types.
-  // Fall back to sources.yaml types, then to filename inference for legacy dirs.
-  const declaredTypes = new Set<string>(
-    mdManifest
-      ? mdManifest.map((s) => s.type)
-      : manifest
-        ? (manifest.sources ?? []).map((s) => s.type)
-        : sourceFiles
-            .filter((f) => f.name.endsWith(".pdf"))
-            .map((f) => inferTypeFromFilename(f.name))
-            .filter((t): t is string => t !== null)
-  );
+  const declaredTypes = collectDeclaredSourceTypes({
+    mdManifest,
+    manifest,
+    sourceFiles
+  });
   const present = required.filter((t) => declaredTypes.has(t));
   const missing = required.filter((t) => !declaredTypes.has(t));
 
